@@ -53,11 +53,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\AI\AI_Base.cs" />
      <Compile Include="Assets\Scripts\AI\AI_Random.cs" />
-     <Compile Include="Assets\Scripts\AI\IBrain.cs" />
-     <Compile Include="Assets\Scripts\AI\IPlayer.cs" />
-     <Compile Include="Assets\Scripts\AI\Player_Base.cs" />
+     <Compile Include="Assets\Scripts\AI\Base Classes\AI_Base.cs" />
+     <Compile Include="Assets\Scripts\AI\Base Classes\IBrain.cs" />
+     <Compile Include="Assets\Scripts\AI\Base Classes\IPlayer.cs" />
+     <Compile Include="Assets\Scripts\AI\Base Classes\Player_Base.cs" />
      <Compile Include="Assets\Scripts\Buisness Logic\AdjectiveHolder.cs" />
      <Compile Include="Assets\Scripts\Buisness Logic\BoardBuilder.cs" />
      <Compile Include="Assets\Scripts\Buisness Logic\BoardPosition.cs" />
