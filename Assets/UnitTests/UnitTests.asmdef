@@ -1,0 +1,14 @@
+{
+    "name": "UnitTests",
+    "references": [
+        "ConnectFourLibrary"
+    ],
+    "optionalUnityReferences": [
+        "TestAssemblies"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false
+}
