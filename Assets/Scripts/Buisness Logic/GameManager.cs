@@ -18,25 +18,57 @@ namespace ConnectFour
         private GameBoard _gameBoard;
         private List<GameObject> _explosions = new List<GameObject>();
         private IStatsView _stats;
+        private bool _timeToMove;
         public int TurnCount;
         // Use this for initialization
-        void Start()
+        void Awake()
         {
             _moveManager = GetComponent<IMoveManager>();
             _gameBoard = GetComponent<GameBoard>();
             _stats = GetComponent<IStatsView>();
-        }
+            _moveManager.OnTeamsRegisteredEvent += StartGame;
+            _moveManager.OnReadyForNextMove += ReadyForNextMove;
 
-        // Update is called once per frame
+        }
         void Update()
         {
+            if (_timeToMove)
+            {
+                OrderNextMove();
+            }
+        }
+        private void ReadyForNextMove(object sender, MoveEvent e)
+        {
+            _timeToMove = true;
+
+        }
+
+        private void StartGame(object sender, bool e)
+        {
+            if (e)
+            {
+
+                _timeToMove = true;
+            }
+        }
+
+        private void OrderNextMove()
+        {
+
             if (Time.time > _lastMove + TurnDelay && !GameOver)
             {
-                _moveManager.RequestMove();
-                _lastMove = Time.time;
-                TurnCount++;
-                CheckForWin();
+                _timeToMove = false;
+                ExecuteMoveCall();          
             }
+        }
+        private void ExecuteMoveCall()
+        {
+            
+            _moveManager.RequestMove();
+            _lastMove = Time.time;
+            TurnCount++;
+            CheckForWin();
+            
         }
         void CheckForWin()
         {
@@ -52,7 +84,7 @@ namespace ConnectFour
         }
         public void ClearBoard()
         {
-            _gameBoard.ClearBoard();            
+            _gameBoard.ClearBoard();
             Invoke("ResetGame", 2f);
         }
         private void ResetGame()

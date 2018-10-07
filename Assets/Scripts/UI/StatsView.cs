@@ -11,38 +11,62 @@ namespace ConnectFour
     {
         public Text WinningMessage;
         public Text DebugBoardState;
+        public GameObject MovesLabel;
+        public Toggle DebugBoardStateToggle;
+        public Toggle MoveListViewToggle;
         public GameObject MovesParent;
         public GameObject MoveTextPrefab;
-        public bool DebugBoardStateViewEnabaled;
+        private bool DebugBoardStateView;
+        private bool MoveListView = true;
         public GameObject scrollBar;
         private List<GameObject> _pastMoves = new List<GameObject>();
         public void UpdateDebugBoardState(GameState gameState)
         {
-            if (DebugBoardStateViewEnabaled)
+            if (DebugBoardStateView)
             {
                 List<string> boardPostions = GetUnformattedBoardState(gameState);
                 List<string> formattedList = FormatBoardStateToDoubleColumn(boardPostions.ToArray());
                 DebugBoardState.text = BuildFormattedList(formattedList);
             }
+            if(!DebugBoardStateView)
+            {
+                DebugBoardState.text = "";
+            }
             UpdateMoveList(gameState);
         }
         public void UpdateMoveList(GameState gameState)
         {
-            List<BoardPosition> boardPositions = new List<BoardPosition>();
-            foreach (BoardPosition bp in gameState.CurrentBoardState)
+            if (MoveListView)
             {
-                if (bp.IsOccupied)
+                MovesLabel.SetActive(true);
+                List<BoardPosition> boardPositions = new List<BoardPosition>();
+                foreach (BoardPosition bp in gameState.CurrentBoardState)
                 {
-                    boardPositions.Add(bp);
+                    if (bp.IsOccupied)
+                    {
+                        boardPositions.Add(bp);
 
-                }	
+                    }
+                }
+                if (boardPositions.Count > 0)
+                {
+                    DisplayMoveList(boardPositions);
+                }
             }
-            if (boardPositions.Count > 0)
+            else if (_pastMoves.Count > 0)
             {
-                DisplayMoveList(boardPositions);
+                MovesLabel.SetActive(false);
+                _pastMoves.ForEach(x => Destroy(x));
+                _pastMoves.Clear();
             }
         }
-
+        private GameObject CreateMovePrefab(string message)
+        {
+            GameObject gb = Instantiate(MoveTextPrefab, Vector2.zero, Quaternion.identity, MovesParent.transform);
+            Text gbText = gb.GetComponent<Text>();
+            gbText.text = message;
+            return gb;
+        }
         private void DisplayMoveList(List<BoardPosition> boardPositions)
         {
             _pastMoves.ForEach(x => Destroy(x));
@@ -51,9 +75,7 @@ namespace ConnectFour
             foreach (BoardPosition bp in boardPositions)
             {
                 string message = $"{bp.Owner} moved to ({bp.XIndex}, {bp.YIndex})";
-                GameObject gb = Instantiate(MoveTextPrefab, Vector2.zero, Quaternion.identity, MovesParent.transform);
-                Text gbText = gb.GetComponent<Text>();
-                gbText.text = message;
+                GameObject gb = CreateMovePrefab(message);
                 _pastMoves.Add(gb);
             }
         }
@@ -128,6 +150,14 @@ namespace ConnectFour
             WinningMessage.text = "";
             DebugBoardState.text = "";
             scrollBar.GetComponent<ScrollBarController>().Reset();
+        }
+        public void SetDebugBoardStateViews()
+        {
+            DebugBoardStateView = DebugBoardStateToggle.isOn;
+        }
+        public void SetMoveListView()
+        {
+            MoveListView = MoveListViewToggle.isOn;
         }
     }
 }

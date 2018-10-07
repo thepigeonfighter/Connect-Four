@@ -2,19 +2,22 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using System;
 namespace ConnectFour
 {
 
     public class MoveManager : MonoBehaviour, IMoveManager
     {
         public TeamName CurrentTeam = TeamName.BlackTeam;
+        public EventHandler<bool> OnTeamsRegisteredEvent { get; set; }
+        public EventHandler<MoveEvent> OnReadyForNextMove { get; set; }
+
         private IPlayer teamBlack;
         private IPlayer teamRed;
         private GUID teamBlackId;
         private GUID teamRedId;
         private GameBoard _gameBoard;
         private PiecePlacer piecePlacer;
-        private bool _gameReadyToStart;
         // Use this for initialization
         void Start()
         {
@@ -40,7 +43,7 @@ namespace ConnectFour
                 player.SignUp(teamRedId);
                 print("Team Red is being played by " + player.GetName() + "with the security id of " + teamRedId.ToString());
                 player.OnMoveComplete += OnPlayerMoveCompleted;
-                _gameReadyToStart = true;
+                OnTeamsRegisteredEvent?.Invoke(this, true);
             }
             else
             {
@@ -52,10 +55,30 @@ namespace ConnectFour
         //It should be able to verify the move is valid
         public void OnPlayerMoveCompleted(object sender, MoveEvent moveEvent)
         {
-            //TODO Check to make sure security handle is valid
-            piecePlacer.SetPiece(moveEvent.MyMove);
-            _gameBoard.SetMovement(moveEvent.MyMove);
-            SetNextTeamAsCurrent();
+            GUID expectedId = GetValidGUID(CurrentTeam);
+            if (expectedId == moveEvent.MySecurityHandle)
+            {
+                piecePlacer.SetPiece(moveEvent.MyMove);
+                _gameBoard.SetMovement(moveEvent.MyMove);
+                SetNextTeamAsCurrent();
+                OnReadyForNextMove?.Invoke(this, moveEvent);
+            }
+            else{
+                print("WARNING HACKERS TRYING TO HACKETY HACKETY HACK!");
+            }
+
+        }
+        private GUID GetValidGUID(TeamName name)
+        {
+            switch (name)
+            {
+                case TeamName.BlackTeam:
+                    return teamBlackId;
+                case TeamName.RedTeam:
+                    return teamRedId;
+                default:
+                    return new GUID();
+            }
         }
         private GUID GetNewGUID()
         {

@@ -5,11 +5,11 @@ using UnityEditor;
 using UnityEngine;
 namespace ConnectFour
 {
-    [RequireComponent(typeof(IBrain))]
+    //[RequireComponent(typeof(IBrain))]
     public class AI_Base : Player_Base, IPlayer
     {
         protected TeamName _myTeam;
-        protected string _myName = "AI_Random";
+        public string _myName = "AI_Random";
         protected GUID _mySecurityHandle;
         private IBrain brain;
         public EventHandler<MoveEvent> OnMoveComplete { get; set; }

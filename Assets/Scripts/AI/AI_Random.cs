@@ -34,6 +34,7 @@ namespace ConnectFour
             {
                 Column = availableColumns[index]
             };
+            
             return move;
         }
 
