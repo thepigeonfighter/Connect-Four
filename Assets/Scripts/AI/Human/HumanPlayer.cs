@@ -17,7 +17,9 @@ namespace ConnectFour
             ColumnIndex index = (ColumnIndex)columnIndex;
             try
             {
-                ColumnIndex match = _gameState.AvailableColumns.First(x => x == index);
+                //A little silly but if the column is not available this will throw a null
+                //which we handle to tell the player to pick a different column
+                 _gameState.AvailableColumns.First(x => x == index);
 
                 Move move = new Move()
                 {

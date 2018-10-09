@@ -36,7 +36,6 @@ namespace ConnectFour
                     }
                 }
             }
-            ResetInternals();
             return result;
 
         }
@@ -380,7 +379,7 @@ namespace ConnectFour
         }
         #endregion 
         #region  Handle Internal State
-        private static void ResetInternals()
+        public static void ResetInternals()
         {
             _blackWinningPositions.Clear();
             _redWinningPositions.Clear();

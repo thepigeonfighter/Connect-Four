@@ -113,6 +113,7 @@ namespace ConnectFour
                 StartCoroutine(DisplayWinningPieces(_gameBoard.GetListofBoardPositionsInGameSpace(result.WinningPositions)));
                 ScoreKeeper.UpdateStats(result);
                 CheckForAutoPlay();
+                CheckForWin.ResetInternals();
             }
         }
         public void ClearBoard()
