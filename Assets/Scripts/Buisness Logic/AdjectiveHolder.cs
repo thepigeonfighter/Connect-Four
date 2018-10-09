@@ -34,7 +34,7 @@ public static class AdjectiveHolder  {
 			words.Add("A typical sort of");
 			words.Add("A type-A");
 			words.Add("A passable");
-			words.Add("A C-");
+			words.Add("A 'C-'");
 			words.Add("A fair to middling");
 			words.Add("An ordinary");
 			words.Add("A garden type");
@@ -111,7 +111,7 @@ public static class AdjectiveHolder  {
             words.Add("perpendicular");
 			words.Add("upright");
 			words.Add("on end");
-			words.Add("level");
+			words.Add("cliff like");
 			words.Add("up-and-down");
 			words.Add("straight-up");
         words.Add("vertical");
@@ -128,5 +128,26 @@ public static class AdjectiveHolder  {
 			words.Add("cater-cornered");
         	words.Add("diagonal");
            return words[UnityEngine.Random.Range(0, words.Count)];	
+	}
+	public static string GetRandomName()
+	{
+		List<string> words = new List<string>();
+            words.Add("Chuckster");
+			words.Add("Pernicious the Baneful");
+			words.Add("Torgo");
+			words.Add("Billy the Childish");
+			words.Add("Frig");
+			words.Add("Mr Particular");
+        	words.Add("Torf");
+			words.Add("Lokschnik DanButterhaun");
+			words.Add("'M' is for Murder");
+			words.Add("Terminatrix");
+			words.Add("Mildred");
+			words.Add("Connexicon");
+			words.Add("Bill Clinton");
+			words.Add("Sneaky Sam");
+			words.Add("Tortado the Clam");
+
+           return words[UnityEngine.Random.Range(0, words.Count)];
 	}
 }

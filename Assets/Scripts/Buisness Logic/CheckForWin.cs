@@ -6,9 +6,11 @@ namespace ConnectFour
 {
     public static class CheckForWin
     {
+        #region Private Vars
         private enum DiagonalDirection { LeftToRight, RightToLeft };
         private static List<BoardPosition> _blackWinningPositions = new List<BoardPosition>();
         private static List<BoardPosition> _redWinningPositions = new List<BoardPosition>();
+        #endregion
         public static GameResult CheckWin(this BoardPosition[,] boardState)
         {
             GameResult result = GetDefaultGameResult();
@@ -34,9 +36,11 @@ namespace ConnectFour
                     }
                 }
             }
+            ResetInternals();
             return result;
 
         }
+        #region Build Game Results
         private static GameResult GetDefaultGameResult()
         {
             GameResult gameResult = new GameResult()
@@ -53,8 +57,9 @@ namespace ConnectFour
                 GameStatus = GameStatus.Completed,
                 Winner = boardPositions[0].Owner,
                 WinType = WinType.Horizontal,
+                Player = boardPositions[0].Player,
                 WinningPositions = GetWinningPieces(boardPositions[0].Owner)
-        };
+            };
             return result;
         }
         private static GameResult GetVerticalWin(List<BoardPosition> boardPositions)
@@ -64,6 +69,7 @@ namespace ConnectFour
                 GameStatus = GameStatus.Completed,
                 Winner = boardPositions[0].Owner,
                 WinType = WinType.Vertical,
+                Player = boardPositions[0].Player,
                 WinningPositions = GetWinningPieces(boardPositions[0].Owner)
             };
             return result;
@@ -75,10 +81,13 @@ namespace ConnectFour
                 GameStatus = GameStatus.Completed,
                 Winner = boardPositions[0].Owner,
                 WinType = WinType.Diagonal,
-                WinningPositions =GetWinningPieces(boardPositions[0].Owner)
+                Player = boardPositions[0].Player,
+                WinningPositions = GetWinningPieces(boardPositions[0].Owner)
             };
             return result;
         }
+        #endregion
+        #region PreChecks 
         //This method checks to make sure that there is a chance for a win 
         //Before doing a complex check
         private static bool IsWinPossible(BoardPosition[,] boardState)
@@ -113,6 +122,16 @@ namespace ConnectFour
             }
             return false;
         }
+        private static bool AreThereEnoughPiecesInPlayForAWin(List<BoardPosition>[] pieces)
+        {
+            if (pieces[0].Count > 3 || pieces[1].Count > 3)
+            {
+                return true;
+            }
+            return false;
+        }
+        #endregion
+        #region Piece Filter
         private static List<BoardPosition>[] GetPiecesInPlayByTeam(BoardPosition[,] boardState)
         {
             List<BoardPosition> teamRedSpots = new List<BoardPosition>();
@@ -134,14 +153,8 @@ namespace ConnectFour
             List<BoardPosition>[] output = new List<BoardPosition>[] { teamBlackSpots, teamRedSpots };
             return output;
         }
-        private static bool AreThereEnoughPiecesInPlayForAWin(List<BoardPosition>[] pieces)
-        {
-            if (pieces[0].Count > 3 || pieces[1].Count > 3)
-            {
-                return true;
-            }
-            return false;
-        }
+        #endregion
+        #region  Horizontal Win Checks
         public static bool CheckForHorizontalWin(List<BoardPosition> boardPositions)
         {
             //Check row
@@ -168,14 +181,14 @@ namespace ConnectFour
             {
                 //Player needs to have middle of the row in order for a chance at a horizontal win
                 BoardPosition centerOfRow = row.FirstOrDefault(x => x.XIndex == 3);
-               // centerOfRow.AddPossibleWinningPiece();
+                // centerOfRow.AddPossibleWinningPiece();
                 if (centerOfRow != null)
                 {
                     int minX = row.Min(x => x.XIndex);
                     int maxX = row.Max(x => x.XIndex);
                     //This fifthindex crap is to catch a silly edge case 
                     BoardPosition fifthIndex = row.FirstOrDefault(x => x.XIndex == 5);
-                    if (minX + 3 < maxX && fifthIndex!=null)
+                    if (minX + 3 < maxX && fifthIndex != null)
                     {
                         for (int i = 0; i < 4; i++)
                         {
@@ -214,42 +227,8 @@ namespace ConnectFour
             }
             return false;
         }
-        private static void AddPossibleWinningPiece(this BoardPosition piece)
-        {
-            switch(piece.Owner)
-            {
-                case TeamName.BlackTeam:
-                    _blackWinningPositions.Add(piece);
-                    break;
-                    case TeamName.RedTeam:
-                    _redWinningPositions.Add(piece);
-                    break;
-            }
-        }
-        private static void ResetWinningPositions(this BoardPosition piece)
-        {
-            switch(piece.Owner)
-            {
-                case TeamName.BlackTeam:
-                    _blackWinningPositions.Clear();
-                    break;
-                    case TeamName.RedTeam:
-                    _redWinningPositions.Clear();
-                    break;
-            }
-        }
-        private static List<BoardPosition> GetWinningPieces(TeamName name)
-        {
-            switch(name)
-            {
-                case TeamName.BlackTeam:
-                    return _blackWinningPositions;
-                case TeamName.RedTeam:
-                    return _redWinningPositions;
-                default:
-                    return null;
-            }
-        }
+        #endregion
+        #region  Vertical Win Checks
         public static bool CheckForVerticalWin(List<BoardPosition> boardPositions)
         {
             List<List<BoardPosition>> positionsOrderedByColumn = new List<List<BoardPosition>>();
@@ -317,7 +296,8 @@ namespace ConnectFour
             return false;
         }
 
-
+        #endregion
+        #region  Diagonal Win Checks
         public static bool CheckForDiagonalWin(List<BoardPosition> boardPositions)
         {
             if (LeftToRightDiagonalWin(boardPositions))
@@ -392,11 +372,62 @@ namespace ConnectFour
                 }
                 if (originPieces.Count > 0)
                 {
-                ResetWinningPositions(originPieces[i]);
+                    ResetWinningPositions(originPieces[i]);
                 }
             }
-            
+
             return false;
         }
+        #endregion 
+        #region  Handle Internal State
+        private static void ResetInternals()
+        {
+            _blackWinningPositions.Clear();
+            _redWinningPositions.Clear();
+        }
+                private static void AddPossibleWinningPiece(this BoardPosition piece)
+        {
+            switch (piece.Owner)
+            {
+                case TeamName.BlackTeam:
+                    if (_blackWinningPositions.Count <= 3)
+                    {
+                        _blackWinningPositions.Add(piece);
+                    }
+                    break;
+
+                case TeamName.RedTeam:
+                    if (_redWinningPositions.Count <= 3)
+                    {
+                        _redWinningPositions.Add(piece);
+                    }
+                    break;
+            }
+        }
+        private static void ResetWinningPositions(this BoardPosition piece)
+        {
+            switch (piece.Owner)
+            {
+                case TeamName.BlackTeam:
+                    _blackWinningPositions.Clear();
+                    break;
+                case TeamName.RedTeam:
+                    _redWinningPositions.Clear();
+                    break;
+            }
+        }
+        private static List<BoardPosition> GetWinningPieces(TeamName name)
+        {
+            switch (name)
+            {
+                case TeamName.BlackTeam:
+                    return _blackWinningPositions;
+                case TeamName.RedTeam:
+                    return _redWinningPositions;
+                default:
+                    return null;
+            }
+        }
+        #endregion
     }
 }

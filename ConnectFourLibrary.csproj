@@ -58,6 +58,9 @@
      <Compile Include="Assets\Scripts\AI\Base Classes\IBrain.cs" />
      <Compile Include="Assets\Scripts\AI\Base Classes\IPlayer.cs" />
      <Compile Include="Assets\Scripts\AI\Base Classes\Player_Base.cs" />
+     <Compile Include="Assets\Scripts\AI\Human\HumanPlayer.cs" />
+     <Compile Include="Assets\Scripts\AI\Human\HumanPlayer_Base.cs" />
+     <Compile Include="Assets\Scripts\AI\Human\IHuman.cs" />
      <Compile Include="Assets\Scripts\Buisness Logic\AdjectiveHolder.cs" />
      <Compile Include="Assets\Scripts\Buisness Logic\BoardBuilder.cs" />
      <Compile Include="Assets\Scripts\Buisness Logic\BoardPosition.cs" />
@@ -65,6 +68,7 @@
      <Compile Include="Assets\Scripts\Buisness Logic\GameBoard.cs" />
      <Compile Include="Assets\Scripts\Buisness Logic\GameManager.cs" />
      <Compile Include="Assets\Scripts\Buisness Logic\GameResult.cs" />
+     <Compile Include="Assets\Scripts\Buisness Logic\GameSpeedController.cs" />
      <Compile Include="Assets\Scripts\Buisness Logic\GameState.cs" />
      <Compile Include="Assets\Scripts\Buisness Logic\IBoardBuilder.cs" />
      <Compile Include="Assets\Scripts\Buisness Logic\IMoveManager.cs" />
@@ -73,7 +77,10 @@
      <Compile Include="Assets\Scripts\Buisness Logic\MoveManager.cs" />
      <Compile Include="Assets\Scripts\Buisness Logic\PieceDestroyer.cs" />
      <Compile Include="Assets\Scripts\Buisness Logic\PiecePlacer.cs" />
+     <Compile Include="Assets\Scripts\Buisness Logic\ScoreKeeper.cs" />
      <Compile Include="Assets\Scripts\Buisness Logic\TeamNames.cs" />
+     <Compile Include="Assets\Scripts\Buisness Logic\TeamStats.cs" />
+     <Compile Include="Assets\Scripts\UI\GameResultsView.cs" />
      <Compile Include="Assets\Scripts\UI\IStatsView.cs" />
      <Compile Include="Assets\Scripts\UI\ScrollBarController.cs" />
      <Compile Include="Assets\Scripts\UI\StatsView.cs" />

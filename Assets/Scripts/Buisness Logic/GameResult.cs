@@ -8,4 +8,5 @@ public class GameResult {
 	public TeamName Winner { get; set; }
 	public WinType WinType { get; set; }
 	public List<BoardPosition> WinningPositions { get; set; }
+	public IPlayer Player{ get; set; }
 }

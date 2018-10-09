@@ -20,6 +20,7 @@ namespace ConnectFour
         public Move GetDesiredMove(GameState gameState)
         {
             return ChooseRandomMove(gameState);
+            
         }
         /*
             GetDesiredMove must return a "Move" Object. The only information you need to 

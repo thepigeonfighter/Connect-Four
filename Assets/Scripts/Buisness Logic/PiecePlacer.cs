@@ -25,10 +25,11 @@ public class PiecePlacer:MonoBehaviour {
         bool exists =_columnIndexPlacementDictionary.TryGetValue(move.Column, out xPos);
 		if(exists)
 		{
+  
             GameObject parent = BuildTeamPieceContainer(move.MyTeam);
             GameObject pieceToPlace = GetPiece(move.MyTeam);
             Instantiate(pieceToPlace, new Vector2(xPos, height), Quaternion.identity, parent.transform);
-
+            
         }
 
     }

@@ -1,27 +1,27 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 namespace ConnectFour
 {
-    //[RequireComponent(typeof(IBrain))]
-    public class AI_Base : Player_Base, IPlayer
+    public class HumanPlayer_Base : Player_Base, IPlayer
     {
         protected TeamName _myTeam;
         public string _myName = "Random AI";
         public bool PickRandomName = true;
         protected GUID _mySecurityHandle;
-        private IBrain brain;
+        private IHuman brain;
         public EventHandler<MoveEvent> OnMoveComplete { get; set; }
         private void Start()
         {
-            brain = GetComponent<IBrain>();     
+            brain = GetComponent<IHuman>();
             if(PickRandomName)
             {
                 _myName = AdjectiveHolder.GetRandomName();
             }
-             GameObject.FindObjectOfType<MoveManager>().RegisterPlayer(this);
+            GameObject.FindObjectOfType<MoveManager>().RegisterPlayer(this);
         }
         public override string GetName()
         {
@@ -31,12 +31,11 @@ namespace ConnectFour
         public override void MakeMove(Move move)
         {
             move.MyTeam = _myTeam;
-            move.Player = this;
+			move.Player = this;
             MoveEvent thisMove = new MoveEvent()
             {
                 MyMove = move,
                 MySecurityHandle = _mySecurityHandle
-                
             };
             if (OnMoveComplete != null)
             {
@@ -44,9 +43,10 @@ namespace ConnectFour
             }
         }
 
-        public void OnTurnRequested(GameState gameState)
+        public async void OnTurnRequested(GameState gameState)
         {
-            MakeMove(brain.GetDesiredMove(gameState));
+            Move move = await brain.GetDesiredMoveAsync(gameState);
+            MakeMove(move);
         }
 
         public void SetTeam(TeamName teamName)
@@ -58,6 +58,5 @@ namespace ConnectFour
         {
             _mySecurityHandle = securityKey;
         }
-
     }
 }

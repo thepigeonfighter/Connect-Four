@@ -11,5 +11,6 @@ public class BoardPosition{
 	public bool IsOccupied { get; set; }
 	public TeamName Owner{ get; set; }
 	public DateTime TimeSet{ get; set; }
+	public IPlayer Player{ get; set; }
 
 }

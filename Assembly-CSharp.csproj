@@ -53,7 +53,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\ScrollBarController.cs" />
+     <Compile Include="Assets\HumanPlayer.cs" />
  <Reference Include="UnityEditor.StandardEvents">
  <HintPath>C:/Users/georg/OneDrive/Documents/Repos/Unity/Shape Editor Tool/Connect Four/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
  </Reference>

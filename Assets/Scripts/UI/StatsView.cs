@@ -84,7 +84,7 @@ namespace ConnectFour
         {
             string winType = GetWinTypeWord(result.WinType);
             string winWord = AdjectiveHolder.GetVictoryWord();
-            WinningMessage.text = ($"{GetAdjective(turnCount)} {winType} {winWord} by {result.Winner} in {turnCount} turns");
+            WinningMessage.text = ($"{GetAdjective(turnCount)} {winType} {winWord} by {result.Player.GetName()} in {turnCount} turns");
         }
         private List<string> GetUnformattedBoardState(GameState gameState)
         {
