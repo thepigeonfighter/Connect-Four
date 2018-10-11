@@ -53,7 +53,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\HumanPlayer.cs" />
+     <Compile Include="Assets\AI_Torgo.cs" />
  <Reference Include="UnityEditor.StandardEvents">
  <HintPath>C:/Users/georg/OneDrive/Documents/Repos/Unity/Shape Editor Tool/Connect Four/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
  </Reference>

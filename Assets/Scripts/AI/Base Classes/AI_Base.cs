@@ -52,6 +52,7 @@ namespace ConnectFour
         public void SetTeam(TeamName teamName)
         {
             _myTeam = teamName;
+            brain.SetTeam(teamName);
         }
 
         public override void SignUp(GUID securityKey)

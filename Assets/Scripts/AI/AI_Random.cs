@@ -10,6 +10,7 @@ namespace ConnectFour
     
     public class AI_Random : MonoBehaviour, IBrain
     {
+        private TeamName _myTeam;
         /*
             This "GetDesiredMove" method will be called when it is your AI's turn to move
             you will be given a GameState object which has which contains an array of BoardPositions
@@ -22,11 +23,17 @@ namespace ConnectFour
             return ChooseRandomMove(gameState);
             
         }
+
+        public void SetTeam(TeamName teamName)
+        {
+            _myTeam = teamName;
+        }
+
         /*
-            GetDesiredMove must return a "Move" Object. The only information you need to 
-            encode in that object is which column you would like to place your piece in
-            the base classes handle the rest. 
-         */
+   GetDesiredMove must return a "Move" Object. The only information you need to 
+   encode in that object is which column you would like to place your piece in
+   the base classes handle the rest. 
+*/
         private Move ChooseRandomMove(GameState gameState)
         {
             List<ColumnIndex> availableColumns = gameState.AvailableColumns;
