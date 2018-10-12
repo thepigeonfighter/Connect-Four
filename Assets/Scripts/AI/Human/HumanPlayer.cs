@@ -10,8 +10,24 @@ namespace ConnectFour
     {
         public GameObject AvailableMoves;
         private bool _timeToMove;
-        private Move _capturedMove;
+        private ColumnIndex  _choosenColumn;
         private GameState _gameState;
+
+        public async Task<ColumnIndex> GetDesiredMoveAsync(GameState gameState)
+        {
+            _gameState = gameState;
+            _timeToMove = true;
+            DisplayColumnOptions();
+            int tries = 0;
+            int timeOut = 1000;
+            while (_timeToMove && tries < timeOut)
+            {
+                tries++;
+                await Task.Delay(200);
+            }
+            return _choosenColumn;
+        }
+        //This needs to be public so the buttons can access this script
         public void SetCapturedMove(int columnIndex)
         {
             ColumnIndex index = (ColumnIndex)columnIndex;
@@ -21,11 +37,8 @@ namespace ConnectFour
                 //which we handle to tell the player to pick a different column
                  _gameState.AvailableColumns.First(x => x == index);
 
-                Move move = new Move()
-                {
-                    Column = index
-                };
-                _capturedMove = move;
+                
+                _choosenColumn = index;
                 _timeToMove = false;
                 AvailableMoves.SetActive(false);
             }
@@ -38,20 +51,7 @@ namespace ConnectFour
         {
             AvailableMoves.SetActive(true);
         }
-        public async Task<Move> GetDesiredMoveAsync(GameState gameState)
-        {
-            _gameState = gameState;
-            _timeToMove = true;
-            DisplayColumnOptions();
-            int tries = 0;
-            int timeOut = 1000;
-            while (_timeToMove && tries < timeOut)
-            {
-                tries++;
-                await Task.Delay(200);
-            }
-            return _capturedMove;
 
-        }
+
     }
 }
