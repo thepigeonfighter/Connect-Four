@@ -3,6 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 public interface IBrain
 {
-    Move GetDesiredMove( GameState gameState);
+    ColumnIndex ChooseColumnIndex( GameState gameState);
 
 }

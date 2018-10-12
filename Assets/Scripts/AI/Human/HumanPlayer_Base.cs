@@ -28,8 +28,10 @@ namespace ConnectFour
             return _myName;
         }
 
-        public override void MakeMove(Move move)
+        public override void MakeMove(ColumnIndex index)
         {
+            Move move = new Move();
+            move.Column = index;
             move.MyTeam = _myTeam;
 			move.Player = this;
             MoveEvent thisMove = new MoveEvent()
@@ -45,8 +47,8 @@ namespace ConnectFour
 
         public async void OnTurnRequested(GameState gameState)
         {
-            Move move = await brain.GetDesiredMoveAsync(gameState);
-            MakeMove(move);
+            ColumnIndex index = await brain.GetDesiredMoveAsync(gameState);
+            MakeMove(index);
         }
 
         public void SetTeam(TeamName teamName)

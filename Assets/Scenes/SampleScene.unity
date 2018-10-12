@@ -233,6 +233,10 @@ Prefab:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1468443490000696, guid: 53c348737ba80fa49a7769c60c58932c, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 53c348737ba80fa49a7769c60c58932c, type: 2}
   m_IsPrefabAsset: 0
@@ -3187,7 +3191,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BottomCollider: {fileID: 2044899053}
-  IsBoardFull: 0
 --- !u!114 &1688337432
 MonoBehaviour:
   m_ObjectHideFlags: 0
