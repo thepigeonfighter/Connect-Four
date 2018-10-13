@@ -10,11 +10,8 @@ namespace ConnectFour
 
     public class AI_Random : MonoBehaviour, IBrain
     {
-<<<<<<< HEAD
         private TeamName _myTeam;
-=======
-        
->>>>>>> master
+
         /*
         This "ChooseColumnIndex" method will be called when it is your AI's turn to move
         you will be given a GameState object which has which contains an array of BoardPositions
@@ -27,7 +24,6 @@ namespace ConnectFour
             return ChooseRandomMove(gameState);
         }
 
-<<<<<<< HEAD
         public void SetTeam(TeamName teamName)
         {
             _myTeam = teamName;
@@ -38,10 +34,9 @@ namespace ConnectFour
    encode in that object is which column you would like to place your piece in
    the base classes handle the rest. 
 */
-        private Move ChooseRandomMove(GameState gameState)
-=======
+
         private ColumnIndex ChooseRandomMove(GameState gameState)
->>>>>>> master
+
         {
             List<ColumnIndex> availableColumns = gameState.AvailableColumns;
             int index = UnityEngine.Random.Range(0, availableColumns.Count);

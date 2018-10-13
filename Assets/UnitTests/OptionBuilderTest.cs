@@ -8,6 +8,7 @@ using System.Collections.Generic;
 
 public class OptionBuilderTest
 {
+    /*
 
     [Test]
     public void OptionBuilderTestSimplePasses()
@@ -41,7 +42,7 @@ public class OptionBuilderTest
     /*
     Available targets should not just be vanilla they need to specifically calculate to the board positions 
     index and adjust accordingly
-     */
+     
     [Test]
     public void BottomRightBoardPosTest()
     {
@@ -92,4 +93,5 @@ public class OptionBuilderTest
         };
         return bp;
     }
+    */
 }

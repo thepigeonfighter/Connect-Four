@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 namespace ConnectFour.AI.AI_Torgo
@@ -10,28 +11,31 @@ namespace ConnectFour.AI.AI_Torgo
         private BoardPosition[,] _currentBoard;
         private List<ColumnIndex> _availableColumns;
         private List<BoardPosition> _availableMoves;
+        private List<BoardPosition> _targets = new List<BoardPosition>();
         private List<BoardPosition> _moves = new List<BoardPosition>();
+        private Target _selectedTarget;
         private TeamName _myTeam;
-        public Move GetDesiredMove(GameState gameState)
+        public ColumnIndex ChooseColumnIndex(GameState gameState)
         {
             InitGameState(gameState);
-
-            Move move = ChooseRandomMove(gameState);
-            BoardPosition boardPosition = GetBoardPosition(move);
-            _moves.Add(boardPosition);
-            return move;
-
+            int index = PickBestTarget().GetNextPosition(_currentBoard).XIndex;
+            return (ColumnIndex)index;
         }
-        private Move ChooseRandomMove(GameState gameState)
+
+        private Target PickBestTarget()
+        {
+            Target bestTarget = new Target();
+            List<Target> possibleTargets = FindAvailableTargets(GetAvailableMoves());
+            possibleTargets.OrderBy(x => x.GetFourCost(_currentBoard, _myTeam));
+            bestTarget = possibleTargets[0];
+            return bestTarget;
+        }
+        private ColumnIndex ChooseRandomMove(GameState gameState)
         {
             List<ColumnIndex> availableColumns = gameState.AvailableColumns;
             int index = UnityEngine.Random.Range(0, availableColumns.Count);
-            Move move = new Move()
-            {
-                Column = availableColumns[index]
-            };
-
-            return move;
+            ColumnIndex randomColumn = availableColumns[index];
+            return randomColumn;
         }
         private BoardPosition GetBoardPosition(Move move)
         {
@@ -70,6 +74,17 @@ namespace ConnectFour.AI.AI_Torgo
             }
             return moves;
         }
+        private List<Target> FindAvailableTargets(List<BoardPosition> availableMoves)
+        {
+            OptionBuilder builder = new OptionBuilder();
+            List<Target> targets = new List<Target>();
+            foreach(BoardPosition bp in availableMoves)
+            {
+                Option option = builder.BuildOption(bp, _currentBoard, _targets);
+                targets.AddRange(option.Targets);
+            }
+            return targets;
+        }
 
 
         void OnDrawGizmos()
@@ -78,13 +93,9 @@ namespace ConnectFour.AI.AI_Torgo
             if (_availableMoves != null)
             {
                 OptionBuilder builder = new OptionBuilder();
-               // OptionCalculations calculations = new OptionCalculations();
-                //List<BoardPosition> availableMoves = GetAvailableMoves();
-                // _availableMoves.ForEach(x => Gizmos.DrawCube(x.Position, new Vector2(.3f, .3f)));
                 foreach (BoardPosition bp in _availableMoves)
                 {
-                    Option option = builder.BuildOption(bp, _currentBoard);
-                   // option.FourCost =  calculations.CalculateFourCost(option, _currentBoard, _myTeam);
+                    Option option = builder.BuildOption(bp, _currentBoard, _targets);
                     if (option.AvailableTargets < 1)
                     {
                         Gizmos.color = Color.red;
@@ -99,15 +110,30 @@ namespace ConnectFour.AI.AI_Torgo
                     }
                     Gizmos.DrawCube(bp.Position, new Vector2(.3f, .3f));
                     Handles.Label(bp.Position, option.TotalScore.ToString());
-                }
-                Gizmos.color = Color.cyan;
+                }   
+                _targets.Clear();
                 foreach (BoardPosition bp in _moves)
                 {
-                    Option option = builder.BuildOption(bp, _currentBoard);
-                    option.Targets.ForEach(x => Gizmos.DrawSphere(x.Position, .25f));
+                    Option option = builder.BuildOption(bp, _currentBoard,_targets);
+                           
+                    foreach (Target t in option.Targets)
+                    {
+
+                        if (t.CheckIfTargetValid(_currentBoard, _myTeam))
+                        {
+                            Gizmos.color = Color.cyan;
+                            Handles.Label(t.TargetPosition.Position, t.GetFourCost(_currentBoard, _myTeam).ToString());
+                            Gizmos.DrawSphere(t.TargetPosition.Position, .25f);
+                            
+                            Gizmos.color = Color.yellow;
+                            t.Path.ForEach(x => Gizmos.DrawSphere(x.Position, .1f));
+                        }
+
+                    }
+                    // option.Targets.ForEach(x => _targets.Add(x));
                 }
             }
-            
+
 
         }
 
@@ -116,10 +142,10 @@ namespace ConnectFour.AI.AI_Torgo
             _myTeam = teamName;
         }
     }
-    /*
-    There has got be  a better way of calculating t 4cost 
+    
+    //There has got be  a better way of calculating t 4cost 
 
-
+    #region Foolish Calculations
 
     public class OptionCalculations
     {
@@ -300,207 +326,8 @@ namespace ConnectFour.AI.AI_Torgo
         }
 
     }
-    */
-    public class Option
-    {
-        public int TotalScore { get { return GetTotalScore(); } private set { TotalScore = value; } }
-        public BoardPosition MyPosition { get; set; }
-        public List<Vector2Int> TargetIndices { get; set; }
-        public List<BoardPosition> Targets { get; set; }
-        public int AvailableTargets { get; set; }
-        public int FourCost { get; set; }
-        public int EFourCost { get; set; }
-        public int ConsequenceCost { get; set; }
-        private int GetTotalScore()
-        {
-            return AvailableTargets - FourCost - EFourCost - ConsequenceCost;
-        }
-    }
-    public class OptionBuilder
-    {
+    #endregion
+    
 
-        private enum TargetNames { Target_North, Target_NorthEast, Target_East, Target_SouthEast, Target_South, Target_SouthWest, Target_West, Target_NorthWest }
-        private Dictionary<TargetNames, Vector2Int> _targetToCoordDictionary = new Dictionary<TargetNames, Vector2Int>();
-        public OptionBuilder()
-        {
-            InitDictionary();
-        }
-        private void InitDictionary()
-        {
-            _targetToCoordDictionary.Add(TargetNames.Target_North, new Vector2Int(0, 3));
-            _targetToCoordDictionary.Add(TargetNames.Target_NorthEast, new Vector2Int(3, 3));
-            _targetToCoordDictionary.Add(TargetNames.Target_East, new Vector2Int(3, 0));
-            _targetToCoordDictionary.Add(TargetNames.Target_SouthEast, new Vector2Int(3, -3));
-            _targetToCoordDictionary.Add(TargetNames.Target_South, new Vector2Int(0, -3));
-            _targetToCoordDictionary.Add(TargetNames.Target_SouthWest, new Vector2Int(-3, -3));
-            _targetToCoordDictionary.Add(TargetNames.Target_West, new Vector2Int(-3, 0));
-            _targetToCoordDictionary.Add(TargetNames.Target_NorthWest, new Vector2Int(-3, 3));
-        }
-        public Option BuildOption(BoardPosition boardPosition, BoardPosition[,] _currentBoard)
-        {
-            Option option = new Option();
-            option.TargetIndices = GetAvailableTargets(boardPosition);
-            option.MyPosition = boardPosition;
-            option.AvailableTargets = option.TargetIndices.Count;
-            option.Targets = BuildTargetList(option.TargetIndices, boardPosition, _currentBoard);
-            return option;
-        }
-        private List<BoardPosition> BuildTargetList(List<Vector2Int> targetIndices, BoardPosition boardPosition, BoardPosition[,] curentBoard)
-        {
-            List<BoardPosition> targets = new List<BoardPosition>();
-            // targetIndices.ForEach(x => Debug.Log(x));
-            foreach (Vector2Int v in targetIndices)
-            {
-                int newX = boardPosition.XIndex + v.x;
-                int newY = boardPosition.YIndex + v.y;
-                if (!curentBoard[newX, newY].IsOccupied)
-                {
-
-                    //Debug.Log("Board Index was "+ boardPosition.XIndex +" , " + boardPosition.YIndex +  "X= " + newX + ", Y = " + newY);
-                    targets.Add(curentBoard[newX, newY]);
-
-                }
-            }
-            return targets;
-        }
-        private List<Vector2Int> GetAvailableTargets(BoardPosition boardPosition)
-        {
-            List<Vector2Int> targets = new List<Vector2Int>();
-            if (boardPosition.XIndex < 3)
-            {
-                targets = GetAvailableTargetsOnLeftSide(boardPosition.YIndex);
-            }
-            else if (boardPosition.XIndex == 3)
-            {
-                targets = GetAvailableTargetsOnCenter(boardPosition.YIndex);
-            }
-            else if (boardPosition.XIndex > 3)
-            {
-                targets = GetAvailableTargetsOnRightSide(boardPosition.YIndex);
-            }
-            return targets;
-        }
-        private List<Vector2Int> GetAvailableTargetsOnLeftSide(int y)
-        {
-            List<Vector2Int> targets = new List<Vector2Int>();
-            if (y > 2)
-            {
-                targets = GetTopLeftTargetList();
-            }
-            else
-            {
-                targets = GetBottomLeftTargetList();
-            }
-            return targets;
-        }
-        private List<Vector2Int> GetAvailableTargetsOnRightSide(int y)
-        {
-            List<Vector2Int> targets = new List<Vector2Int>();
-            if (y > 2)
-            {
-                targets = GetTopRightTargetList();
-            }
-            else
-            {
-                targets = GetBottomRightTargetList();
-            }
-            return targets;
-        }
-        private List<Vector2Int> GetAvailableTargetsOnCenter(int y)
-        {
-            List<Vector2Int> targets = new List<Vector2Int>();
-            if (y > 2)
-            {
-                targets = GetTopCenterTargetList();
-            }
-            else
-            {
-                targets = GetBottomCenterTargetList();
-            }
-            return targets;
-        }
-
-        #region Target Lists
-        private List<Vector2Int> GetBottomLeftTargetList()
-        {
-            List<Vector2Int> vectors = new List<Vector2Int>();
-            Vector2Int north, northEast, east;
-            _targetToCoordDictionary.TryGetValue(TargetNames.Target_North, out north);
-            _targetToCoordDictionary.TryGetValue(TargetNames.Target_NorthEast, out northEast);
-            _targetToCoordDictionary.TryGetValue(TargetNames.Target_East, out east);
-            vectors.Add(north);
-            vectors.Add(northEast);
-            vectors.Add(east);
-            return vectors;
-        }
-        private List<Vector2Int> GetBottomRightTargetList()
-        {
-            List<Vector2Int> vectors = new List<Vector2Int>();
-            Vector2Int north, northWest, west;
-            _targetToCoordDictionary.TryGetValue(TargetNames.Target_North, out north);
-            _targetToCoordDictionary.TryGetValue(TargetNames.Target_NorthWest, out northWest);
-            _targetToCoordDictionary.TryGetValue(TargetNames.Target_West, out west);
-            vectors.Add(north);
-            vectors.Add(northWest);
-            vectors.Add(west);
-            return vectors;
-        }
-        private List<Vector2Int> GetTopRightTargetList()
-        {
-            List<Vector2Int> vectors = new List<Vector2Int>();
-            Vector2Int south, southWest, west;
-            _targetToCoordDictionary.TryGetValue(TargetNames.Target_South, out south);
-            _targetToCoordDictionary.TryGetValue(TargetNames.Target_SouthWest, out southWest);
-            _targetToCoordDictionary.TryGetValue(TargetNames.Target_West, out west);
-            vectors.Add(south);
-            vectors.Add(southWest);
-            vectors.Add(west);
-            return vectors;
-        }
-        private List<Vector2Int> GetTopLeftTargetList()
-        {
-            List<Vector2Int> vectors = new List<Vector2Int>();
-            Vector2Int south, southEast, east;
-            _targetToCoordDictionary.TryGetValue(TargetNames.Target_South, out south);
-            _targetToCoordDictionary.TryGetValue(TargetNames.Target_SouthEast, out southEast);
-            _targetToCoordDictionary.TryGetValue(TargetNames.Target_East, out east);
-            vectors.Add(south);
-            vectors.Add(southEast);
-            vectors.Add(east);
-            return vectors;
-        }
-        private List<Vector2Int> GetTopCenterTargetList()
-        {
-            List<Vector2Int> vectors = new List<Vector2Int>();
-            Vector2Int south, southEast, east, west, southWest;
-            _targetToCoordDictionary.TryGetValue(TargetNames.Target_South, out south);
-            _targetToCoordDictionary.TryGetValue(TargetNames.Target_SouthEast, out southEast);
-            _targetToCoordDictionary.TryGetValue(TargetNames.Target_East, out east);
-            _targetToCoordDictionary.TryGetValue(TargetNames.Target_SouthWest, out southWest);
-            _targetToCoordDictionary.TryGetValue(TargetNames.Target_West, out west);
-            vectors.Add(south);
-            vectors.Add(southEast);
-            vectors.Add(east);
-            vectors.Add(southWest);
-            vectors.Add(west);
-            return vectors;
-        }
-        private List<Vector2Int> GetBottomCenterTargetList()
-        {
-            List<Vector2Int> vectors = new List<Vector2Int>();
-            Vector2Int north, northWest, west, east, northEast;
-            _targetToCoordDictionary.TryGetValue(TargetNames.Target_North, out north);
-            _targetToCoordDictionary.TryGetValue(TargetNames.Target_NorthWest, out northWest);
-            _targetToCoordDictionary.TryGetValue(TargetNames.Target_West, out west);
-            _targetToCoordDictionary.TryGetValue(TargetNames.Target_NorthEast, out northEast);
-            _targetToCoordDictionary.TryGetValue(TargetNames.Target_East, out east);
-            vectors.Add(north);
-            vectors.Add(northWest);
-            vectors.Add(west);
-            vectors.Add(northEast);
-            vectors.Add(east);
-            return vectors;
-        }
-        #endregion
-    }
+   
 }

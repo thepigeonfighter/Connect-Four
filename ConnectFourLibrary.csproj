@@ -55,6 +55,10 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\AI\AI_Random.cs" />
      <Compile Include="Assets\Scripts\AI\AI_Torgo\AI_Torgo.cs" />
+     <Compile Include="Assets\Scripts\AI\AI_Torgo\Option.cs" />
+     <Compile Include="Assets\Scripts\AI\AI_Torgo\OptionBuilder.cs" />
+     <Compile Include="Assets\Scripts\AI\AI_Torgo\Target.cs" />
+     <Compile Include="Assets\Scripts\AI\AI_Torgo\TargetBuilder.cs" />
      <Compile Include="Assets\Scripts\AI\Base Classes\AI_Base.cs" />
      <Compile Include="Assets\Scripts\AI\Base Classes\IBrain.cs" />
      <Compile Include="Assets\Scripts\AI\Base Classes\IPlayer.cs" />
