@@ -9,8 +9,6 @@ namespace ConnectFour.AI.AI_Torgo
     {
         
         private BoardPosition[,] _currentBoard;
-        private List<ColumnIndex> _availableColumns;
-        private List<BoardPosition> _availableMoves;
         private List<Target> _targets = new List<Target>();
         private List<BoardPosition> _moves = new List<BoardPosition>();
         private Target _selectedTarget;
@@ -18,7 +16,6 @@ namespace ConnectFour.AI.AI_Torgo
         public ColumnIndex ChooseColumnIndex(GameState gameState)
         {
             InitGameState(gameState);
-            _targets = FindAvailableTargets(GetAvailableMoves());
             PickBestTarget();
             ColumnIndex index = PickRandomMoveBaseOnBestTarget();
             UpdateMovesList(index);
@@ -64,24 +61,7 @@ namespace ConnectFour.AI.AI_Torgo
                 _selectedTarget = _targets[0];
             }
         }
-        private ColumnIndex ChooseRandomMove(GameState gameState)
-        {
-            List<ColumnIndex> availableColumns = gameState.AvailableColumns;
-            int index = UnityEngine.Random.Range(0, availableColumns.Count);
-            ColumnIndex randomColumn = availableColumns[index];
-            return randomColumn;
-        }
-        private BoardPosition GetBoardPosition(Move move)
-        {
-            for (int i = 0; i < 5; i++)
-            {
-                if (!_currentBoard[(int)move.Column, i].IsOccupied)
-                {
-                    return _currentBoard[(int)move.Column, i];
-                }
-            }
-            return null;
-        }
+
         private void UpdateMovesList(ColumnIndex chosenColumn)
         {
             for (int i = 0; i < 6; i++)
@@ -95,40 +75,11 @@ namespace ConnectFour.AI.AI_Torgo
         }
         private void InitGameState(GameState gameState)
         {
-            _currentBoard = gameState.CurrentBoardState;
-          //  _availableColumns = gameState.AvailableColumns;
-            _availableMoves = GetAvailableMoves();
-
+            _currentBoard = gameState.CurrentBoardState;           
+        }
+        private void CheckEnemyFourCosts()
+        {
             
-        }
-        private List<BoardPosition> GetAvailableMoves()
-        {
-            List<BoardPosition> moves = new List<BoardPosition>();
-            for (int i = 0; i < 7; i++)
-            {
-                int counter = 0;
-                int max = 5;
-                while (_currentBoard[i, counter].IsOccupied && counter < max)
-                {
-                    counter++;
-                }
-                if (!_currentBoard[i, counter].IsOccupied)
-                {
-                    moves.Add(_currentBoard[i, counter]);
-                }
-            }
-            return moves;
-        }
-        private List<Target> FindAvailableTargets(List<BoardPosition> availableMoves)
-        {
-            OptionBuilder builder = new OptionBuilder(_myTeam);
-            List<Target> targets = new List<Target>();
-            foreach(BoardPosition bp in availableMoves)
-            {
-                Option option = builder.BuildOption(bp, _currentBoard, _targets);
-                targets.AddRange(option.Targets);
-            }
-            return targets;
         }
 
 
@@ -145,7 +96,7 @@ namespace ConnectFour.AI.AI_Torgo
                     foreach (Target t in option.Targets)
                     {
                         Gizmos.DrawCube(t.TargetPosition.Position, new Vector2(.25f, .25f));
-                        Vector2 labelPos = new Vector2(t.TargetPosition.Position.x, t.TargetPosition.Position.y +1f);
+                        Vector2 labelPos = new Vector2(t.TargetPosition.Position.x, t.TargetPosition.Position.y +.75f);
                         GUIStyle style = new GUIStyle();
                         Handles.Label(labelPos, t.GetFourCost(_currentBoard, _myTeam).ToString(), style);
                         Gizmos.color = Color.gray;
@@ -173,7 +124,6 @@ namespace ConnectFour.AI.AI_Torgo
 
         public void OnRoundCompletion()
         {
-            _availableMoves.Clear();
             _currentBoard = null;
             _moves.Clear();
             _selectedTarget = null;
