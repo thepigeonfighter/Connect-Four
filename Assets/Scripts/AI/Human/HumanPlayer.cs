@@ -9,8 +9,10 @@ namespace ConnectFour
     public class HumanPlayer : MonoBehaviour, IHuman
     {
         public GameObject AvailableMoves;
+
+        public bool CheckIfColumnValid = true;
         private bool _timeToMove;
-        private ColumnIndex  _choosenColumn;
+        private ColumnIndex _choosenColumn;
         private GameState _gameState;
 
         public async Task<ColumnIndex> GetDesiredMoveAsync(GameState gameState)
@@ -31,19 +33,29 @@ namespace ConnectFour
         public void SetCapturedMove(int columnIndex)
         {
             ColumnIndex index = (ColumnIndex)columnIndex;
-            try
+            if (CheckIfColumnValid)
             {
-                //A little silly but if the column is not available this will throw a null
-                //which we handle to tell the player to pick a different column
-                 _gameState.AvailableColumns.First(x => x == index);
+                try
+                {
+                    //A little silly but if the column is not available this will throw a null
+                    //which we handle to tell the player to pick a different column
+                    _gameState.AvailableColumns.First(x => x == index);
 
-                
+
+                    _choosenColumn = index;
+                    _timeToMove = false;
+                    AvailableMoves.SetActive(false);
+                }
+                catch
+                {
+                    Debug.Log("Column is full pick another one");
+                }
+            }
+            else
+            {
                 _choosenColumn = index;
                 _timeToMove = false;
                 AvailableMoves.SetActive(false);
-            }
-			catch{
-                Debug.Log("Column is full pick another one");
             }
 
         }

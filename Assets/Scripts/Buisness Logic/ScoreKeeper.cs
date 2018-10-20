@@ -13,7 +13,7 @@ namespace ConnectFour
 
         public static void UpdateStats(GameResult result)
         {
-            switch(result.Winner)
+            switch (result.Winner)
             {
                 case TeamName.BlackTeam:
                     UpdateBlackTeamStats(result);
@@ -22,11 +22,17 @@ namespace ConnectFour
                     UpdateRedTeamStats(result);
                     break;
             }
+
+
         }
         private static void UpdateRedTeamStats(GameResult result)
         {
-            _redTeamStats.WinCount++;
-            _redTeamStats.Player = result.Player;
+            if (result.WinType != WinType.Forfeit)
+            {
+                _redTeamStats.WinCount++;
+                _redTeamStats.Player = result.Player;
+            }
+            
             _redTeamStats = _redTeamStats.AddCorrectWinType(result.WinType);
 
         }
@@ -43,13 +49,20 @@ namespace ConnectFour
                 case WinType.Vertical:
                     stats.VerticalWins++;
                     break;
+                case WinType.Forfeit:
+                    stats.Forfeits++;
+                    break;
             }
             return stats;
         }
         private static void UpdateBlackTeamStats(GameResult result)
         {
-            _blackTeamStats.WinCount++;
-            _blackTeamStats.Player = result.Player;
+            if (result.WinType != WinType.Forfeit)
+            {
+                _blackTeamStats.WinCount++;
+                _blackTeamStats.Player = result.Player;
+            }
+            
             _blackTeamStats = _blackTeamStats.AddCorrectWinType(result.WinType);
         }
         public static TeamStats GetRedTeamStats()

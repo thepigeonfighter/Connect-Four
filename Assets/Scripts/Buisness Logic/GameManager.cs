@@ -29,17 +29,31 @@ namespace ConnectFour
         #endregion
        
         #region  MonoBehaviour Methods
-        void Awake()
+        private void Awake()
         {
             _moveManager = GetComponent<IMoveManager>();
             _gameBoard = GetComponent<GameBoard>();
             _stats = GetComponent<IStatsView>();
             _moveManager.OnTeamsRegisteredEvent += StartGame;
             _moveManager.OnReadyForNextMove += ReadyForNextMove;
+            _moveManager.OnGameForfeit += OnGameForfeit;
             _gameBoard.OnBoardFullEvent += BoardFullEvent;
 
         }
-        void Update()
+
+        private void OnGameForfeit(object sender, TeamName e)
+        {
+            GameResult result = new GameResult();
+            //This is misleading in this case it is actually the team that forfeited the game
+            result.Winner = e;
+            result.WinType = WinType.Forfeit;
+            _stats.DisplayForfeitMessage(result);
+            ScoreKeeper.UpdateStats(result);
+            HandleEndOfRound();
+
+        }
+
+        private void Update()
         {
             if (_timeToMove)
             {
@@ -51,8 +65,7 @@ namespace ConnectFour
         #region Events
         private void BoardFullEvent(object sender, EventArgs e)
         {
-            GameOver = true;
-            CheckForAutoPlay();
+            HandleEndOfRound();
         }
         private void ReadyForNextMove(object sender, MoveEvent e)
         {
@@ -101,20 +114,25 @@ namespace ConnectFour
                 Invoke("ClearBoard", TimeBetweenGames);
             }
         }
-        void CheckGameState()
+        private void CheckGameState()
         {
             GameState gameState = _moveManager.GetCurrentGameState();
             _stats.UpdateDebugBoardState(gameState);
             GameResult result = gameState.CurrentBoardState.CheckWin();
             if (result.GameStatus == GameStatus.Completed)
             {
-                GameOver = true;
+               
                 _stats.DisplayWinMessage(result, TurnCount);
                 StartCoroutine(DisplayWinningPieces(_gameBoard.GetListofBoardPositionsInGameSpace(result.WinningPositions)));
                 ScoreKeeper.UpdateStats(result);
-                CheckForAutoPlay();
-                CheckForWin.ResetInternals();
+                HandleEndOfRound();
             }
+        }
+        private void HandleEndOfRound()
+        {
+            GameOver = true;
+            CheckForAutoPlay();
+            CheckForWin.ResetInternals();
         }
         public void ClearBoard()
         {
@@ -128,6 +146,7 @@ namespace ConnectFour
             _explosions.Clear();
             _stats.ResetViewState();
             GameOver = false;
+            _timeToMove = true;
         }
         private IEnumerator DisplayWinningPieces(List<Vector2> vectors)
         {

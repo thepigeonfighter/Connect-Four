@@ -10,5 +10,6 @@ public interface IMoveManager
     GameState GetCurrentGameState();
     EventHandler<bool> OnTeamsRegisteredEvent{ get; set; }
     EventHandler<MoveEvent> OnReadyForNextMove{ get; set; }
+    EventHandler<TeamName> OnGameForfeit{ get; set; }
 }
 
