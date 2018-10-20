@@ -21,6 +21,7 @@ namespace ConnectFour
         */
         public ColumnIndex ChooseColumnIndex(GameState gameState)
         {
+            
             return ChooseRandomMove(gameState);
         }
 

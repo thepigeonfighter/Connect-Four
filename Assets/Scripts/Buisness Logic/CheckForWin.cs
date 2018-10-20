@@ -171,6 +171,7 @@ namespace ConnectFour
                     return true;
                 }
             }
+
             return false;
 
         }
@@ -183,6 +184,7 @@ namespace ConnectFour
                 // centerOfRow.AddPossibleWinningPiece();
                 if (centerOfRow != null)
                 {
+
                     int minX = row.Min(x => x.XIndex);
                     int maxX = row.Max(x => x.XIndex);
                     //This fifthindex crap is to catch a silly edge case 

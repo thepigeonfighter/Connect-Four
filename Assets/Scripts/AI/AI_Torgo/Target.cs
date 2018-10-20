@@ -9,6 +9,7 @@ namespace ConnectFour.AI.AI_Torgo
         public List<BoardPosition> Path { get; set; }
 		public BoardPosition Source { get; set; }
 		public BoardPosition TargetPosition { get; set; }
+		public List<BoardPosition> MovesRequiredToFillPath{get;set;}
 		public bool IsValidTarget { get; set; }
         public bool CheckIfTargetValid(BoardPosition[,] currentBoard, TeamName myTeam)
 		{
@@ -22,17 +23,10 @@ namespace ConnectFour.AI.AI_Torgo
 			}
             return true;
         }
+
 		public int GetFourCost(BoardPosition[,] currentBoard, TeamName myTeam)
 		{
-            int tempFourCost = 4;
-			foreach(BoardPosition bp in Path)
-			{
-				if(currentBoard[bp.XIndex,bp.YIndex].Owner == myTeam)
-				{
-                    tempFourCost--;
-                }
-			}
-            return tempFourCost;
+            return MovesRequiredToFillPath.Count;
         }
 		public BoardPosition GetNextPosition(BoardPosition[,] currentBoard)
 		{

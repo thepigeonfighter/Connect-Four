@@ -7,8 +7,12 @@ namespace ConnectFour.AI.AI_Torgo
 
     public class OptionBuilder
     {
-
-        public Option BuildOption(BoardPosition boardPosition, BoardPosition[,] _currentBoard, List<BoardPosition> previousTargets)
+        TeamName _myTeam;
+        public OptionBuilder(TeamName myTeam)
+        {
+            _myTeam = myTeam;
+        }
+        public Option BuildOption(BoardPosition boardPosition, BoardPosition[,] _currentBoard, List<Target> previousTargets)
         {
             Option option = new Option();
             option.MyPosition = boardPosition;
@@ -18,7 +22,7 @@ namespace ConnectFour.AI.AI_Torgo
 
             return option;
         }
-        private List<Target> SetTargets(BoardPosition boardPosition, BoardPosition[,]_currentBoard)
+        private List<Target> SetTargets(BoardPosition boardPosition, BoardPosition[,] _currentBoard)
         {
             TargetBuilder builder = new TargetBuilder(_currentBoard);
             List<Target> targets = new List<Target>();
@@ -26,7 +30,10 @@ namespace ConnectFour.AI.AI_Torgo
             foreach(TargetNames name in targetNames)
             {
                 Target target = builder.BuildTarget(boardPosition, name);
-                targets.Add(target);
+                if (target.CheckIfTargetValid(_currentBoard, _myTeam))
+                {
+                    targets.Add(target);
+                }
 
             }
             return targets;
@@ -116,11 +123,11 @@ namespace ConnectFour.AI.AI_Torgo
         }
         #endregion
 
-        private bool IsThisOptionAlreadyATarget(BoardPosition boardPosition, List<BoardPosition> targets)
+        private bool IsThisOptionAlreadyATarget(BoardPosition boardPosition, List<Target> targets)
         {
             try
             {
-                BoardPosition target = targets.First(x => x.Position == boardPosition.Position);
+                Target target = targets.First(x => x.TargetPosition.Position == boardPosition.Position);
                 return true;
             }
             catch
