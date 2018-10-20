@@ -62,5 +62,9 @@ namespace ConnectFour
             _mySecurityHandle = securityKey;
         }
 
+        public void OnRoundCompleted()
+        {
+            brain.OnRoundCompletion();
+        }
     }
 }

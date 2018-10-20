@@ -131,6 +131,7 @@ namespace ConnectFour
         private void HandleEndOfRound()
         {
             GameOver = true;
+            _moveManager.OnRoundCompletion();
             CheckForAutoPlay();
             CheckForWin.ResetInternals();
         }

@@ -7,10 +7,8 @@ namespace ConnectFour.AI.AI_Torgo
 {
     public class AI_Torgo : MonoBehaviour, IBrain
     {
-
-        private BoardPosition[,] _currentBoard;
-        private List<ColumnIndex> _availableColumns;
         private List<BoardPosition> _availableMoves;
+        private BoardPosition[,] _currentBoard;
         private List<BoardPosition> _targets = new List<BoardPosition>();
         private List<BoardPosition> _moves = new List<BoardPosition>();
         private Target _selectedTarget;
@@ -51,10 +49,10 @@ namespace ConnectFour.AI.AI_Torgo
         private void InitGameState(GameState gameState)
         {
             _currentBoard = gameState.CurrentBoardState;
-            _availableColumns = gameState.AvailableColumns;
+          //  _availableColumns = gameState.AvailableColumns;
             _availableMoves = GetAvailableMoves();
 
-
+            
         }
         private List<BoardPosition> GetAvailableMoves()
         {
@@ -140,6 +138,16 @@ namespace ConnectFour.AI.AI_Torgo
         public void SetTeam(TeamName teamName)
         {
             _myTeam = teamName;
+        }
+
+        public void OnRoundCompletion()
+        {
+            _availableMoves.Clear();
+            _currentBoard = null;
+            _moves.Clear();
+            _selectedTarget = null;
+            _targets = null;
+            
         }
     }
     

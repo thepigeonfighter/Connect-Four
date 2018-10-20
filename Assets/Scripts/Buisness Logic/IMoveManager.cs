@@ -7,6 +7,7 @@ public interface IMoveManager
     void RequestMove();
     void OnPlayerMoveCompleted(object sender, MoveEvent moveEvent);
     void RegisterPlayer(IPlayer player);
+    void OnRoundCompletion();
     GameState GetCurrentGameState();
     EventHandler<bool> OnTeamsRegisteredEvent{ get; set; }
     EventHandler<MoveEvent> OnReadyForNextMove{ get; set; }
