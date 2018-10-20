@@ -11,4 +11,6 @@ public interface IPlayer
     void SignUp(GUID securityKey);
     void SetTeam(TeamName teamName);
     void OnTurnRequested(GameState gameState);
+
+    void OnRoundCompleted();
 }

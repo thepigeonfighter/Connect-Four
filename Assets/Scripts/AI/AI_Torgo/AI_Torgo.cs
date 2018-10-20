@@ -96,10 +96,10 @@ namespace ConnectFour.AI.AI_Torgo
         private void InitGameState(GameState gameState)
         {
             _currentBoard = gameState.CurrentBoardState;
-            _availableColumns = gameState.AvailableColumns;
+          //  _availableColumns = gameState.AvailableColumns;
             _availableMoves = GetAvailableMoves();
 
-
+            
         }
         private List<BoardPosition> GetAvailableMoves()
         {
@@ -169,6 +169,16 @@ namespace ConnectFour.AI.AI_Torgo
         public void SetTeam(TeamName teamName)
         {
             _myTeam = teamName;
+        }
+
+        public void OnRoundCompletion()
+        {
+            _availableMoves.Clear();
+            _currentBoard = null;
+            _moves.Clear();
+            _selectedTarget = null;
+            _targets = null;
+            
         }
     }
     

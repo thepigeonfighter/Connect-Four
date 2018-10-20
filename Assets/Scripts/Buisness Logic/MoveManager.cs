@@ -110,6 +110,11 @@ namespace ConnectFour
                 return false;
             }
         }
+        public void OnRoundCompletion()
+        {
+            teamBlack.OnRoundCompleted();
+            teamRed.OnRoundCompleted();
+        }
 
         //This should tell the current player that they need to move
         public void RequestMove()

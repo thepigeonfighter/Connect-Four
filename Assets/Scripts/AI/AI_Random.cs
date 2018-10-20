@@ -25,17 +25,17 @@ namespace ConnectFour
             return ChooseRandomMove(gameState);
         }
 
-        public void SetTeam(TeamName teamName)
+
+        public void OnRoundCompletion()
+        {
+            //This will Get Called at the end of each round
+            //This is where you would reset any internal lists or stats that you are keeping
+            //Track of so the next round starts with a clean slate
+        }
+       public void SetTeam(TeamName teamName)
         {
             _myTeam = teamName;
         }
-
-        /*
-   GetDesiredMove must return a "Move" Object. The only information you need to 
-   encode in that object is which column you would like to place your piece in
-   the base classes handle the rest. 
-*/
-
         private ColumnIndex ChooseRandomMove(GameState gameState)
 
         {
