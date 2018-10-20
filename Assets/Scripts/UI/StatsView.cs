@@ -159,5 +159,10 @@ namespace ConnectFour
         {
             MoveListView = MoveListViewToggle.isOn;
         }
+
+        public void DisplayForfeitMessage(GameResult result)
+        {
+            WinningMessage.text = $"{result.Winner} was playing the fool and as such they have forfeited the game.";
+        }
     }
 }

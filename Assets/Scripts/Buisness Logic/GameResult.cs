@@ -9,4 +9,5 @@ public class GameResult {
 	public WinType WinType { get; set; }
 	public List<BoardPosition> WinningPositions { get; set; }
 	public IPlayer Player{ get; set; }
+	
 }

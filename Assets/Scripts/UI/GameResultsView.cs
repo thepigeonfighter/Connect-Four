@@ -31,7 +31,7 @@ namespace ConnectFour
         }
         string BuildWinTypeDisplay(TeamStats stats)
         {
-            string wintypeDisplay = $" Horizontal Wins -- {stats.HorizontalWins} \n Vertical Wins -- {stats.VerticalWins} \n Diagonal Wins -- {stats.DiagonalWins}";
+            string wintypeDisplay = $" Horizontal Wins -- {stats.HorizontalWins} \n Vertical Wins -- {stats.VerticalWins} \n Diagonal Wins -- {stats.DiagonalWins} \n Forfeitures {stats.Forfeits}";
             return wintypeDisplay;
         }
         string BuildPlayedByText(TeamStats stats)

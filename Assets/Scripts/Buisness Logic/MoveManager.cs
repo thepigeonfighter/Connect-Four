@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using System;
+using System.Linq;
+
 namespace ConnectFour
 {
 
@@ -12,6 +14,8 @@ namespace ConnectFour
         public TeamName CurrentTeam = TeamName.BlackTeam;
         public EventHandler<bool> OnTeamsRegisteredEvent { get; set; }
         public EventHandler<MoveEvent> OnReadyForNextMove { get; set; }
+
+        public EventHandler<TeamName> OnGameForfeit{get;set;}
         #endregion
 
         #region  Private Vars
@@ -76,16 +80,35 @@ namespace ConnectFour
             GUID expectedId = GetValidGUID(CurrentTeam);
             if (expectedId == moveEvent.MySecurityHandle)
             {
-                piecePlacer.SetPiece(moveEvent.MyMove);
-                _gameBoard.SetMovement(moveEvent.MyMove);
-                SetNextTeamAsCurrent();
-                OnReadyForNextMove?.Invoke(this, moveEvent);
+                if (ValidateMove(moveEvent))
+                {
+                    piecePlacer.SetPiece(moveEvent.MyMove);
+                    _gameBoard.SetMovement(moveEvent.MyMove);
+                    SetNextTeamAsCurrent();
+                    OnReadyForNextMove?.Invoke(this, moveEvent);
+                }
+                else{
+                    
+                    OnGameForfeit?.Invoke(this, CurrentTeam);
+                }
             }
             else
             {
                 print("WARNING HACKERS TRYING TO HACKETY HACKETY HACK!");
             }
 
+        }
+        private bool ValidateMove(MoveEvent moveEvent)
+        {
+            try
+            {
+                ColumnIndex validIndex = GetCurrentGameState().AvailableColumns.First(x => x == moveEvent.MyMove.Column);
+
+                return true;
+            }
+            catch{
+                return false;
+            }
         }
 
         //This should tell the current player that they need to move
