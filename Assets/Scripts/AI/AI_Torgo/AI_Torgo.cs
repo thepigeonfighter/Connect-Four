@@ -7,7 +7,7 @@ namespace ConnectFour.AI.AI_Torgo
 {
     public class AI_Torgo : MonoBehaviour, IBrain
     {
-
+        
         private BoardPosition[,] _currentBoard;
         private List<ColumnIndex> _availableColumns;
         private List<BoardPosition> _availableMoves;
@@ -117,7 +117,9 @@ namespace ConnectFour.AI.AI_Torgo
                     foreach (Target t in option.Targets)
                     {
                         Gizmos.DrawCube(t.TargetPosition.Position, new Vector2(.25f, .25f));
-                        Handles.Label(t.TargetPosition.Position, t.GetFourCost(_currentBoard, _myTeam).ToString());
+                        Vector2 labelPos = new Vector2(t.TargetPosition.Position.x, t.TargetPosition.Position.y +1f);
+                        GUIStyle style = new GUIStyle();
+                        Handles.Label(labelPos, t.GetFourCost(_currentBoard, _myTeam).ToString(), style);
                         Gizmos.color = Color.gray;
                         t.MovesRequiredToFillPath.ForEach(x => Gizmos.DrawSphere(x.Position, .25f));
                         Gizmos.color = Color.red;

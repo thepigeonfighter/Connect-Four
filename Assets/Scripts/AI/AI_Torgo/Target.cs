@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 namespace ConnectFour.AI.AI_Torgo
 {
@@ -26,7 +27,11 @@ namespace ConnectFour.AI.AI_Torgo
 
 		public int GetFourCost(BoardPosition[,] currentBoard, TeamName myTeam)
 		{
-            return MovesRequiredToFillPath.Count;
+            int fourCost = MovesRequiredToFillPath.Count;
+            List<BoardPosition> unFilledPathPositions = Path.Where(x => x.IsOccupied == false).ToList();
+            fourCost += unFilledPathPositions.Count;
+
+            return fourCost;
         }
 		public BoardPosition GetNextPosition(BoardPosition[,] currentBoard)
 		{

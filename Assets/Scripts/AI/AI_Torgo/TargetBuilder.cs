@@ -113,10 +113,10 @@ namespace ConnectFour.AI.AI_Torgo
                     allMovesBelowPath.Add(pos);
                 }
             }
-           // allMovesBelowPath.AddRange(path);
             foreach (BoardPosition bp in allMovesBelowPath)
             {
-                if (!bp.IsOccupied)
+                
+                if (!bp.IsOccupied )
                 {
                     requiredMoves.Add(bp);
                 }
