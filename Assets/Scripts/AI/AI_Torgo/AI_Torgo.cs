@@ -18,23 +18,51 @@ namespace ConnectFour.AI.AI_Torgo
         public ColumnIndex ChooseColumnIndex(GameState gameState)
         {
             InitGameState(gameState);
-            int chosenInex = 6;
-            ColumnIndex chosenColumn = (ColumnIndex)chosenInex;
-            OptionBuilder builder = new OptionBuilder(_myTeam);
-            //int index = PickBestTarget().GetNextPosition(_currentBoard).XIndex;
             _targets = FindAvailableTargets(GetAvailableMoves());
-            UpdateMovesList(chosenColumn);
-            //int index = 
-            return chosenColumn;
+            PickBestTarget();
+            ColumnIndex index = PickRandomMoveBaseOnBestTarget();
+            UpdateMovesList(index);
+            return index;
         }
+        private ColumnIndex PickRandomMoveBaseOnBestTarget()
+        {
+            if (_selectedTarget != null)
+            {
 
-        private Target PickBestTarget()
+                int requiredMovesCount = _selectedTarget.MovesRequiredToFillPath.Count;
+                if (requiredMovesCount > 0)
+                {
+                    Debug.Log(requiredMovesCount);
+                    BoardPosition pos = _selectedTarget.MovesRequiredToFillPath[0];
+                    return (ColumnIndex)pos.XIndex;
+                }else
+                {
+                    return (ColumnIndex)_selectedTarget.GetNextPosition(_currentBoard).XIndex;
+                }
+            }
+            else{
+                return ColumnIndex.Three;
+            }
+        }
+        private void PickBestTarget()
         {
             Target bestTarget = new Target();
-            List<Target> possibleTargets = FindAvailableTargets(GetAvailableMoves());
-            possibleTargets.OrderBy(x => x.GetFourCost(_currentBoard, _myTeam));
-            bestTarget = possibleTargets[0];
-            return bestTarget;
+            OptionBuilder builder = new OptionBuilder(_myTeam);
+            List<Option> options = new List<Option>();
+            _moves.ForEach(x => options.Add(builder.BuildOption(x, _currentBoard, _targets)));
+            _targets.Clear();
+            foreach(Option o in options)
+            {
+                foreach(Target t in o.Targets)
+                {
+                    _targets.Add(t);
+                }
+            }
+            _targets = _targets.OrderBy(x => x.GetFourCost(_currentBoard, _myTeam)).ToList();
+            if (_targets.Count > 0)
+            {
+                _selectedTarget = _targets[0];
+            }
         }
         private ColumnIndex ChooseRandomMove(GameState gameState)
         {
@@ -128,6 +156,11 @@ namespace ConnectFour.AI.AI_Torgo
                         t.Path.ForEach(x => Gizmos.DrawSphere(x.Position, .15f));
                     }
                 }
+            }
+            if(_selectedTarget != null)
+            {
+                Gizmos.color = Color.yellow;
+                Gizmos.DrawSphere(_selectedTarget.TargetPosition.Position, .25f);
             }
 
 

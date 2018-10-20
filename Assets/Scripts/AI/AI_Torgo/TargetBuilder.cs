@@ -17,6 +17,7 @@ namespace ConnectFour.AI.AI_Torgo
             List<BoardPosition> localPath = new List<BoardPosition>();
             target.Source = sourcePosition;
             _sourcePosition = sourcePosition;
+            target.IsValidTarget = true;
             int x = sourcePosition.XIndex;
             int y = sourcePosition.YIndex;
             switch (targetName)
@@ -110,7 +111,10 @@ namespace ConnectFour.AI.AI_Torgo
                 for (int i = 1; i < bp.YIndex + 1; i++)
                 {
                     BoardPosition pos = _currentBoard[bp.XIndex, bp.YIndex - i];
-                    allMovesBelowPath.Add(pos);
+                    if (!path.Contains(pos))
+                    {
+                        allMovesBelowPath.Add(pos);
+                    }
                 }
             }
             foreach (BoardPosition bp in allMovesBelowPath)
