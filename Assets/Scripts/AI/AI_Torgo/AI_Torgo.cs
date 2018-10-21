@@ -7,66 +7,122 @@ namespace ConnectFour.AI.AI_Torgo
 {
     public class AI_Torgo : MonoBehaviour, IBrain
     {
-        
+
         private BoardPosition[,] _currentBoard;
-        private List<Target> _targets = new List<Target>();
+        private List<Target> _myTargets = new List<Target>();
+        private List<Target> _enemyTargets = new List<Target>();
         private List<BoardPosition> _moves = new List<BoardPosition>();
+        private List<BoardPosition> _enemyMoves = new List<BoardPosition>();
         private Target _selectedTarget;
+        private Target _enemySelectedTarget;
         private TeamName _myTeam;
+        private TeamName _enemyTeam;
         public ColumnIndex ChooseColumnIndex(GameState gameState)
         {
             InitGameState(gameState);
-            PickBestTarget();
-            ColumnIndex index = PickRandomMoveBaseOnBestTarget();
+            UpdateEnemyMoves();
+            PickMyBestTarget();
+            PickEnemyBestTarget();
+            ColumnIndex index = PickRandomMoveBaseOnBestTarget(gameState);
             UpdateMovesList(index);
             return index;
         }
-        private ColumnIndex PickRandomMoveBaseOnBestTarget()
+        private ColumnIndex PickRandomMoveBaseOnBestTarget(GameState gameState)
         {
+            if (_enemySelectedTarget != null)
+            {
+                if (_enemySelectedTarget.GetFourCost(_currentBoard,_enemyTeam) < 2 )
+                {
+                    if (_selectedTarget != null && _selectedTarget.GetFourCost(_currentBoard, _myTeam) > 1)
+                    {
+                        return (ColumnIndex)_enemySelectedTarget.GetNextPosition(_currentBoard).XIndex;
+                    }
+                }
+            }
             if (_selectedTarget != null)
             {
 
                 int requiredMovesCount = _selectedTarget.MovesRequiredToFillPath.Count;
                 if (requiredMovesCount > 0)
                 {
-                    Debug.Log(requiredMovesCount);
                     BoardPosition pos = _selectedTarget.MovesRequiredToFillPath[0];
                     return (ColumnIndex)pos.XIndex;
-                }else
+                }
+                else
                 {
                     return (ColumnIndex)_selectedTarget.GetNextPosition(_currentBoard).XIndex;
                 }
             }
-            else{
-                return ColumnIndex.Three;
+            else
+            {
+                return ChooseRandomMove(gameState);
             }
         }
-        private void PickBestTarget()
+        private ColumnIndex ChooseRandomMove(GameState gameState)
+
         {
-            Target bestTarget = new Target();
-            OptionBuilder builder = new OptionBuilder(_myTeam);
+            List<ColumnIndex> availableColumns = gameState.AvailableColumns;
+            int index = UnityEngine.Random.Range(0, availableColumns.Count);
+            ColumnIndex randomColumn = availableColumns[index];
+
+
+            return randomColumn;
+        }
+
+        private void PickEnemyBestTarget()
+        {
+            List<Option> options = BuildOptionList(_enemyMoves, _enemyTargets, _enemyTeam);
+            _enemyTargets = BuildTargetLists(options, _enemyTeam);
+            _enemySelectedTarget = BestTargetFromList(_enemyTargets,_enemyTeam);
+
+
+        }
+        private void PickMyBestTarget()
+        {
+            List<Option> options = BuildOptionList(_moves, _myTargets, _myTeam);
+            _myTargets = BuildTargetLists(options, _myTeam);
+            _selectedTarget = BestTargetFromList(_myTargets, _myTeam);
+
+        }
+        private List<Option> BuildOptionList(List<BoardPosition> moves, List<Target> oldTargets , TeamName teamName)
+        {
+            OptionBuilder builder = new OptionBuilder(teamName);
             List<Option> options = new List<Option>();
-            _moves.ForEach(x => options.Add(builder.BuildOption(x, _currentBoard, _targets)));
-            _targets.Clear();
-            foreach(Option o in options)
+            moves.ForEach(x => options.Add(builder.BuildOption(x, _currentBoard, oldTargets)));
+            return options;
+        }
+        private List<Target> BuildTargetLists(List<Option> options, TeamName teamName)
+        {
+            List<Target> targets = new List<Target>();
+            foreach (Option o in options)
             {
-                foreach(Target t in o.Targets)
+                foreach (Target t in o.Targets)
                 {
-                    _targets.Add(t);
+                    if (t.CheckIfTargetValid(_currentBoard, teamName))
+                    {
+                        targets.Add(t);
+                    }
                 }
             }
-            _targets = _targets.OrderBy(x => x.GetFourCost(_currentBoard, _myTeam)).ToList();
-            if (_targets.Count > 0)
-            {
-                _selectedTarget = _targets[0];
-            }
+            return targets;
         }
+        private Target BestTargetFromList(List<Target> targets, TeamName teamName)
+        {
+            Target selectedTarget = null;
+            targets = targets.OrderBy(x => x.GetFourCost(_currentBoard, teamName)).ToList();
+            if (targets.Count > 0)
+            {
+                selectedTarget = targets[0];
+            }
+            return selectedTarget;
+        }
+
 
         private void UpdateMovesList(ColumnIndex chosenColumn)
         {
             for (int i = 0; i < 6; i++)
             {
-                if(!_currentBoard[(int)chosenColumn,i].IsOccupied)
+                if (!_currentBoard[(int)chosenColumn, i].IsOccupied)
                 {
                     _moves.Add(_currentBoard[(int)chosenColumn, i]);
                     break;
@@ -75,16 +131,29 @@ namespace ConnectFour.AI.AI_Torgo
         }
         private void InitGameState(GameState gameState)
         {
-            _currentBoard = gameState.CurrentBoardState;           
+            _currentBoard = gameState.CurrentBoardState;
         }
-        private void CheckEnemyFourCosts()
+        private void UpdateEnemyMoves()
         {
-            
+            List<BoardPosition> enemyMoves = new List<BoardPosition>();
+            foreach (BoardPosition bp in _currentBoard)
+            {
+                if (bp.Owner == _enemyTeam)
+                {
+                    enemyMoves.Add(bp);
+                }
+            }
+            _enemyMoves = enemyMoves;
+
+
         }
+
+
 
 
         void OnDrawGizmos()
         {
+
             if (_moves != null)
             {
 
@@ -92,34 +161,53 @@ namespace ConnectFour.AI.AI_Torgo
 
                 foreach (BoardPosition bp in _moves)
                 {
-                    Option option = builder.BuildOption(bp, _currentBoard, _targets);
+                    Option option = builder.BuildOption(bp, _currentBoard, _myTargets);
                     foreach (Target t in option.Targets)
                     {
                         Gizmos.DrawCube(t.TargetPosition.Position, new Vector2(.25f, .25f));
-                        Vector2 labelPos = new Vector2(t.TargetPosition.Position.x, t.TargetPosition.Position.y +.75f);
+                        Vector2 labelPos = new Vector2(t.TargetPosition.Position.x, t.TargetPosition.Position.y + .75f);
                         GUIStyle style = new GUIStyle();
                         Handles.Label(labelPos, t.GetFourCost(_currentBoard, _myTeam).ToString(), style);
                         Gizmos.color = Color.gray;
                         t.MovesRequiredToFillPath.ForEach(x => Gizmos.DrawSphere(x.Position, .25f));
-                        Gizmos.color = Color.red;
-                        Gizmos.DrawSphere(t.TargetPosition.Position, .25f);
                         Gizmos.color = Color.green;
                         t.Path.ForEach(x => Gizmos.DrawSphere(x.Position, .15f));
                     }
                 }
             }
-            if(_selectedTarget != null)
+            if (_selectedTarget != null)
             {
                 Gizmos.color = Color.yellow;
                 Gizmos.DrawSphere(_selectedTarget.TargetPosition.Position, .25f);
+
+            }
+            if (_enemySelectedTarget != null)
+            {
+                Gizmos.color = Color.magenta;
+                Gizmos.DrawWireSphere(_enemySelectedTarget.TargetPosition.Position, .45f);
+            }
+            if (_enemyTargets != null && _enemyTargets.Count > 0)
+            {
+                Gizmos.color = Color.red;
+                _enemyTargets.ForEach(x => Gizmos.DrawWireSphere(x.TargetPosition.Position, .25f));
             }
 
 
         }
-        
+
         public void SetTeam(TeamName teamName)
         {
-            _myTeam = teamName;
+            switch(teamName)
+            {
+                case TeamName.BlackTeam:
+                    _myTeam = TeamName.BlackTeam;
+                    _enemyTeam = TeamName.RedTeam;
+                    break;
+                case TeamName.RedTeam:
+                    _myTeam = TeamName.RedTeam;
+                    _enemyTeam = TeamName.BlackTeam;
+                    break;
+            }
         }
 
         public void OnRoundCompletion()
@@ -127,9 +215,11 @@ namespace ConnectFour.AI.AI_Torgo
             _currentBoard = null;
             _moves.Clear();
             _selectedTarget = null;
-            _targets = null;
-            
+            _myTargets = null;
+            _enemyMoves.Clear();
+            _enemySelectedTarget = null;
+            _enemyTargets = null;
         }
     }
-    
+
 }

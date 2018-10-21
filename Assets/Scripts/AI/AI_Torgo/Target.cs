@@ -19,6 +19,7 @@ namespace ConnectFour.AI.AI_Torgo
                 BoardPosition boardPosition = currentBoard[bp.XIndex, bp.YIndex];
                 if( boardPosition.IsOccupied && boardPosition.Owner != myTeam)
 				{
+                  //  Debug.Log($"Position owned by {boardPosition.Owner} being looked at by {myTeam}");
                     return false;
                 }
 			}
@@ -28,7 +29,7 @@ namespace ConnectFour.AI.AI_Torgo
 		public int GetFourCost(BoardPosition[,] currentBoard, TeamName myTeam)
 		{
             int fourCost = MovesRequiredToFillPath.Count;
-            List<BoardPosition> unFilledPathPositions = Path.Where(x => x.IsOccupied == false).ToList();
+            List<BoardPosition> unFilledPathPositions = Path.Where(x => x.IsOccupied == false ).ToList();
             fourCost += unFilledPathPositions.Count;
 
             return fourCost;
