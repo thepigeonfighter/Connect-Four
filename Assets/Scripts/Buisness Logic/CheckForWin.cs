@@ -316,7 +316,7 @@ namespace ConnectFour
             List<BoardPosition> originPieces = new List<BoardPosition>();
             foreach (BoardPosition bp in boardPositions)
             {
-                if (bp.XIndex < 3 && bp.YIndex < 3)
+                if (bp.XIndex < 4 && bp.YIndex < 3)
                 {
                     originPieces.Add(bp);
                 }

@@ -186,8 +186,24 @@ public class CheckWinTests
         bool actual = CheckForWin.CheckForDiagonalWin(diagonalWin);
         Assert.False(actual);
     }
+    [Test]
+    public void TestLeftToRightDiagonalWin30()
+    {
+        List<BoardPosition> diagonalWin = W_LeftToRightDiagonal30();
+        bool actual = CheckForWin.CheckForDiagonalWin(diagonalWin);
+        Assert.True(actual);
+    }
     #endregion
     #region  Diagonal Left to Right Cases Test Boards
+    private List<BoardPosition> W_LeftToRightDiagonal30()
+    {
+        List<BoardPosition> diagonalWin = new List<BoardPosition>();
+        diagonalWin.Add(new BoardPosition() { XIndex = 3, YIndex = 0, Owner = TeamName.BlackTeam, IsOccupied = true });
+        diagonalWin.Add(new BoardPosition() { XIndex = 4, YIndex = 1, Owner = TeamName.BlackTeam, IsOccupied = true });
+        diagonalWin.Add(new BoardPosition() { XIndex = 5, YIndex = 2, Owner = TeamName.BlackTeam, IsOccupied = true });
+        diagonalWin.Add(new BoardPosition() { XIndex = 6, YIndex = 3, Owner = TeamName.BlackTeam, IsOccupied = true });
+        return diagonalWin;
+    }
     private List<BoardPosition> W_LeftToRightDiagonal_00()
     {
         List<BoardPosition> diagonalWin = new List<BoardPosition>();
