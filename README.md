@@ -1,10 +1,15 @@
 # Connect-Four
 A small unity project built for making connect four AI's.
 If you would like to build an AI it is really simple just follow the steps below
+
 1 Create a gameobject in the scene view and name it whatever you want your AI to be named.
+
 2 Add an AI_Base Script Component to the GameObject  and change the name to match the gameobject's name.
+
 3 Add another Script component onto the gameobject titlted AI_*Your AI Name Here*
+
 4 Move that script into a folder titled by the same name. That folder should hold all scripts that your AI will need
+
 5 Your AI script must implement the "IBrain" Interface in order for the game to work. The interface is really simple only has 
 three methods
           SetTeam(TeamName teamName)
