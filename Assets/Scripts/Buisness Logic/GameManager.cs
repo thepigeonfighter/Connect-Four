@@ -26,8 +26,10 @@ namespace ConnectFour
         private bool _timeToMove;
         private int TurnCount;
         private bool GameOver;
+
+        private CheckForWin winChecker = new CheckForWin();
         #endregion
-       
+
         #region  MonoBehaviour Methods
         private void Awake()
         {
@@ -118,7 +120,7 @@ namespace ConnectFour
         {
             GameState gameState = _moveManager.GetCurrentGameState();
             _stats.UpdateDebugBoardState(gameState);
-            GameResult result = gameState.CurrentBoardState.CheckWin();
+            GameResult result = winChecker.CheckWin(gameState.CurrentBoardState);
             if (result.GameStatus == GameStatus.Completed)
             {
                
@@ -133,7 +135,7 @@ namespace ConnectFour
             GameOver = true;
             _moveManager.OnRoundCompletion();
             CheckForAutoPlay();
-            CheckForWin.ResetInternals();
+            winChecker = new CheckForWin();
         }
         public void ClearBoard()
         {

@@ -4,14 +4,14 @@ using System.Linq;
 using UnityEngine;
 namespace ConnectFour
 {
-    public static class CheckForWin
+    public class CheckForWin
     {
         #region Private Vars
         private enum DiagonalDirection { LeftToRight, RightToLeft };
-        private static List<BoardPosition> _blackWinningPositions = new List<BoardPosition>();
-        private static List<BoardPosition> _redWinningPositions = new List<BoardPosition>();
+        private List<BoardPosition> _blackWinningPositions = new List<BoardPosition>();
+        private List<BoardPosition> _redWinningPositions = new List<BoardPosition>();
         #endregion
-        public static GameResult CheckWin(this BoardPosition[,] boardState)
+        public GameResult CheckWin(BoardPosition[,] boardState)
         {
             GameResult result = GetDefaultGameResult();
             List<BoardPosition>[] pieces = GetPiecesInPlayByTeam(boardState);
@@ -40,7 +40,7 @@ namespace ConnectFour
 
         }
         #region Build Game Results
-        private static GameResult GetDefaultGameResult()
+        private GameResult GetDefaultGameResult()
         {
             GameResult gameResult = new GameResult()
             {
@@ -49,7 +49,7 @@ namespace ConnectFour
             };
             return gameResult;
         }
-        private static GameResult GetHorizontalWin(List<BoardPosition> boardPositions)
+        private GameResult GetHorizontalWin(List<BoardPosition> boardPositions)
         {
             GameResult result = new GameResult()
             {
@@ -61,7 +61,7 @@ namespace ConnectFour
             };
             return result;
         }
-        private static GameResult GetVerticalWin(List<BoardPosition> boardPositions)
+        private GameResult GetVerticalWin(List<BoardPosition> boardPositions)
         {
             GameResult result = new GameResult()
             {
@@ -73,7 +73,7 @@ namespace ConnectFour
             };
             return result;
         }
-        private static GameResult GetDiagonalWin(List<BoardPosition> boardPositions)
+        private GameResult GetDiagonalWin(List<BoardPosition> boardPositions)
         {
             GameResult result = new GameResult()
             {
@@ -89,7 +89,7 @@ namespace ConnectFour
         #region PreChecks 
         //This method checks to make sure that there is a chance for a win 
         //Before doing a complex check
-        private static bool IsWinPossible(BoardPosition[,] boardState)
+        private bool IsWinPossible(BoardPosition[,] boardState)
         {
             if (boardState[3, 0].IsOccupied)
             {
@@ -121,7 +121,7 @@ namespace ConnectFour
             }
             return false;
         }
-        private static bool AreThereEnoughPiecesInPlayForAWin(List<BoardPosition>[] pieces)
+        private bool AreThereEnoughPiecesInPlayForAWin(List<BoardPosition>[] pieces)
         {
             if (pieces[0].Count > 3 || pieces[1].Count > 3)
             {
@@ -131,7 +131,7 @@ namespace ConnectFour
         }
         #endregion
         #region Piece Filter
-        private static List<BoardPosition>[] GetPiecesInPlayByTeam(BoardPosition[,] boardState)
+        private List<BoardPosition>[] GetPiecesInPlayByTeam(BoardPosition[,] boardState)
         {
             List<BoardPosition> teamRedSpots = new List<BoardPosition>();
             List<BoardPosition> teamBlackSpots = new List<BoardPosition>();
@@ -154,7 +154,7 @@ namespace ConnectFour
         }
         #endregion
         #region  Horizontal Win Checks
-        public static bool CheckForHorizontalWin(List<BoardPosition> boardPositions)
+        public bool CheckForHorizontalWin(List<BoardPosition> boardPositions)
         {
             //Check row
             List<List<BoardPosition>> positionsOrderedByRow = new List<List<BoardPosition>>();
@@ -175,7 +175,7 @@ namespace ConnectFour
             return false;
 
         }
-        private static bool CheckRows(List<BoardPosition> row)
+        private bool CheckRows(List<BoardPosition> row)
         {
             if (row.Count > 3)
             {
@@ -201,7 +201,7 @@ namespace ConnectFour
                             }
                             else
                             {
-                                piece.AddPossibleWinningPiece();
+                                AddPossibleWinningPiece(piece);
                             }
                         }
                     }
@@ -218,7 +218,7 @@ namespace ConnectFour
                             }
                             else
                             {
-                                piece.AddPossibleWinningPiece();
+                                AddPossibleWinningPiece(piece);
                             }
                         }
                     }
@@ -230,7 +230,7 @@ namespace ConnectFour
         }
         #endregion
         #region  Vertical Win Checks
-        public static bool CheckForVerticalWin(List<BoardPosition> boardPositions)
+        public bool CheckForVerticalWin(List<BoardPosition> boardPositions)
         {
             List<List<BoardPosition>> positionsOrderedByColumn = new List<List<BoardPosition>>();
             int height = boardPositions.Max(x => x.XIndex);
@@ -248,7 +248,7 @@ namespace ConnectFour
             }
             return false;
         }
-        private static bool CheckColumns(List<BoardPosition> columns)
+        private bool CheckColumns(List<BoardPosition> columns)
         {
             if (columns.Count > 3)
             {
@@ -270,7 +270,7 @@ namespace ConnectFour
                             else
                             {
                                 ResetWinningPositions(centerOfColumn);
-                                piece.AddPossibleWinningPiece();
+                                AddPossibleWinningPiece(piece);
                             }
                         }
                     }
@@ -287,7 +287,7 @@ namespace ConnectFour
                             }
                             else
                             {
-                                piece.AddPossibleWinningPiece();
+                                AddPossibleWinningPiece(piece);
                             }
                         }
                     }
@@ -299,7 +299,7 @@ namespace ConnectFour
 
         #endregion
         #region  Diagonal Win Checks
-        public static bool CheckForDiagonalWin(List<BoardPosition> boardPositions)
+        public bool CheckForDiagonalWin(List<BoardPosition> boardPositions)
         {
             if (LeftToRightDiagonalWin(boardPositions))
             {
@@ -311,7 +311,7 @@ namespace ConnectFour
             }
 
         }
-        private static bool LeftToRightDiagonalWin(List<BoardPosition> boardPositions)
+        private bool LeftToRightDiagonalWin(List<BoardPosition> boardPositions)
         {
             List<BoardPosition> originPieces = new List<BoardPosition>();
             foreach (BoardPosition bp in boardPositions)
@@ -324,7 +324,7 @@ namespace ConnectFour
 
             return CheckOriginPieces(originPieces, boardPositions, DiagonalDirection.LeftToRight);
         }
-        private static bool RightToLeftDiagonalWin(List<BoardPosition> boardPositions)
+        private bool RightToLeftDiagonalWin(List<BoardPosition> boardPositions)
         {
             List<BoardPosition> originPieces = new List<BoardPosition>();
             foreach (BoardPosition bp in boardPositions)
@@ -337,12 +337,12 @@ namespace ConnectFour
 
             return CheckOriginPieces(originPieces, boardPositions, DiagonalDirection.RightToLeft);
         }
-        private static bool CheckOriginPieces(List<BoardPosition> originPieces, List<BoardPosition> boardPositions, DiagonalDirection direction)
+        private bool CheckOriginPieces(List<BoardPosition> originPieces, List<BoardPosition> boardPositions, DiagonalDirection direction)
         {
 
             for (int i = 0; i < originPieces.Count; i++)
             {
-                originPieces[i].AddPossibleWinningPiece();
+                AddPossibleWinningPiece(originPieces[i]);
                 bool winFound = true;
                 for (int j = 1; j < 4; j++)
                 {
@@ -364,7 +364,7 @@ namespace ConnectFour
                     }
                     else
                     {
-                        piece.AddPossibleWinningPiece();
+                        AddPossibleWinningPiece(piece);
                     }
                 }
                 if (winFound)
@@ -381,12 +381,7 @@ namespace ConnectFour
         }
         #endregion 
         #region  Handle Internal State
-        public static void ResetInternals()
-        {
-            _blackWinningPositions.Clear();
-            _redWinningPositions.Clear();
-        }
-                private static void AddPossibleWinningPiece(this BoardPosition piece)
+        private void AddPossibleWinningPiece( BoardPosition piece)
         {
             switch (piece.Owner)
             {
@@ -405,7 +400,7 @@ namespace ConnectFour
                     break;
             }
         }
-        private static void ResetWinningPositions(this BoardPosition piece)
+        private void ResetWinningPositions(BoardPosition piece)
         {
             switch (piece.Owner)
             {
@@ -417,7 +412,7 @@ namespace ConnectFour
                     break;
             }
         }
-        private static List<BoardPosition> GetWinningPieces(TeamName name)
+        private List<BoardPosition> GetWinningPieces(TeamName name)
         {
             switch (name)
             {
