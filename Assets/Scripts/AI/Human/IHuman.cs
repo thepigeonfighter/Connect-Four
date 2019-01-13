@@ -5,5 +5,5 @@ using UnityEngine;
 
 public interface IHuman{
 
-    Task<ColumnIndex> GetDesiredMoveAsync(GameState gameState);
+    Task<ColumnNumber> GetDesiredMoveAsync(GameState gameState);
 }

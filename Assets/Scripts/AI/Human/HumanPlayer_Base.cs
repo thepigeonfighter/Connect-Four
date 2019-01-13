@@ -28,7 +28,7 @@ namespace ConnectFour
             return _myName;
         }
 
-        public override void MakeMove(ColumnIndex index)
+        public override void MakeMove(ColumnNumber index)
         {
             Move move = new Move();
             move.Column = index;
@@ -47,7 +47,7 @@ namespace ConnectFour
 
         public async void OnTurnRequested(GameState gameState)
         {
-            ColumnIndex index = await brain.GetDesiredMoveAsync(gameState);
+            ColumnNumber index = await brain.GetDesiredMoveAsync(gameState);
             MakeMove(index);
         }
 

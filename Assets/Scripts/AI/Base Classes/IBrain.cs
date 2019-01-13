@@ -5,5 +5,5 @@ public interface IBrain
 {
     void SetTeam(TeamName teamName);
     void OnRoundCompletion();
-    ColumnIndex ChooseColumnIndex(GameState gameState);
+    ColumnNumber ChooseColumnIndex(GameState gameState);
 }

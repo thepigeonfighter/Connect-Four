@@ -19,7 +19,7 @@ namespace ConnectFour
         make informed decisions. It also has a list of available columns which just represents columns that
          are not full yet. 
         */
-        public ColumnIndex ChooseColumnIndex(GameState gameState)
+        public ColumnNumber ChooseColumnIndex(GameState gameState)
         {
             
             return ChooseRandomMove(gameState);
@@ -36,10 +36,10 @@ namespace ConnectFour
         {
             _myTeam = teamName;
         }
-        private ColumnIndex ChooseRandomMove(GameState gameState)
+        private ColumnNumber ChooseRandomMove(GameState gameState)
         {
             int index = UnityEngine.Random.Range(0, gameState.AvailableMoves.Count);
-            ColumnIndex randomColumn = (ColumnIndex)gameState.AvailableMoves[index].XIndex;
+            ColumnNumber randomColumn = gameState.AvailableMoves[index].XIndex;
 
 
             return randomColumn;

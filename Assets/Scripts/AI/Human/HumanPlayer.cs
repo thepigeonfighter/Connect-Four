@@ -13,10 +13,10 @@ namespace ConnectFour
         public int TurnTimeSeconds = 60;
 
         private bool _timeToMove;
-        private ColumnIndex _choosenColumn;
+        private ColumnNumber _choosenColumn;
         private GameState _gameState;
 
-        public async Task<ColumnIndex> GetDesiredMoveAsync(GameState gameState)
+        public async Task<ColumnNumber> GetDesiredMoveAsync(GameState gameState)
         {
             _gameState = gameState;
             _timeToMove = true;
@@ -53,7 +53,7 @@ namespace ConnectFour
         //This needs to be public so the buttons can access this script
         public void SetCapturedMove(int columnIndex)
         {
-            ColumnIndex index = (ColumnIndex)columnIndex;
+
                 try
                 {
                 //A little silly but if the column is not available this will throw a null
@@ -61,7 +61,7 @@ namespace ConnectFour
                 _gameState.AvailableMoves.First(x => x.XIndex == columnIndex);
 
 
-                    _choosenColumn = index;
+                    _choosenColumn = columnIndex;
                     _timeToMove = false;
                     AvailableMoves.SetActive(false);
                 }

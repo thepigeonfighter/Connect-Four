@@ -17,17 +17,17 @@ namespace ConnectFour.AI.AI_Torgo
         private Target _enemySelectedTarget;
         private TeamName _myTeam;
         private TeamName _enemyTeam;
-        public ColumnIndex ChooseColumnIndex(GameState gameState)
+        public ColumnNumber ChooseColumnIndex(GameState gameState)
         {
             InitGameState(gameState);
             UpdateEnemyMoves();
             PickMyBestTarget();
             PickEnemyBestTarget();
-            ColumnIndex index = PickRandomMoveBaseOnBestTarget(gameState);
+            ColumnNumber index = PickRandomMoveBaseOnBestTarget(gameState);
             UpdateMovesList(index);
             return index;
         }
-        private ColumnIndex PickRandomMoveBaseOnBestTarget(GameState gameState)
+        private ColumnNumber PickRandomMoveBaseOnBestTarget(GameState gameState)
         {
             if (_enemySelectedTarget != null)
             {
@@ -35,7 +35,7 @@ namespace ConnectFour.AI.AI_Torgo
                 {
                     if (_selectedTarget != null && _selectedTarget.GetFourCost(_currentBoard, _myTeam) > 1)
                     {
-                        return (ColumnIndex)_enemySelectedTarget.GetNextPosition(_currentBoard).XIndex;
+                        return _enemySelectedTarget.GetNextPosition(_currentBoard).XIndex;
                     }
                 }
             }
@@ -46,11 +46,11 @@ namespace ConnectFour.AI.AI_Torgo
                 if (requiredMovesCount > 0)
                 {
                     BoardPosition pos = _selectedTarget.MovesRequiredToFillPath[0];
-                    return (ColumnIndex)pos.XIndex;
+                    return pos.XIndex;
                 }
                 else
                 {
-                    ColumnIndex column =  (ColumnIndex)_selectedTarget.GetNextPosition(_currentBoard).XIndex;
+                    ColumnNumber column =  _selectedTarget.GetNextPosition(_currentBoard).XIndex;
                     return column;
                 }
             }
@@ -59,11 +59,11 @@ namespace ConnectFour.AI.AI_Torgo
                 return ChooseRandomMove(gameState);
             }
         }
-        private ColumnIndex ChooseRandomMove(GameState gameState)
+        private ColumnNumber ChooseRandomMove(GameState gameState)
 
         {
             int index = UnityEngine.Random.Range(0, gameState.AvailableMoves.Count);
-            ColumnIndex randomColumn =(ColumnIndex)gameState.AvailableMoves[index].XIndex;
+            ColumnNumber randomColumn = gameState.AvailableMoves[index].XIndex;
 
 
             return randomColumn;
@@ -118,7 +118,7 @@ namespace ConnectFour.AI.AI_Torgo
         }
 
 
-        private void UpdateMovesList(ColumnIndex chosenColumn)
+        private void UpdateMovesList(ColumnNumber chosenColumn)
         {
             for (int i = 0; i < 6; i++)
             {

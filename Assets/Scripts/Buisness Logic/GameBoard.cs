@@ -14,7 +14,7 @@ public class GameBoard : MonoBehaviour
     #region  Private Vars
     private BoardPosition[,] _currentBoardState;
     private IBoardBuilder _builder;
-    private List<ColumnIndex> _allColumns = new List<ColumnIndex>();
+    private List<ColumnNumber> _allColumns = new List<ColumnNumber>();
     private bool[] _isColumnFull = new bool[7];
     private bool _boardFull;
     #endregion
@@ -80,10 +80,10 @@ public class GameBoard : MonoBehaviour
         _currentBoardState = _builder.BuildBoard();
         Invoke("EnableBottomCollider", 3f);
     }
-    public List<ColumnIndex> GetAvailableColumns()
+    public List<ColumnNumber> GetAvailableColumns()
     {
-        List<ColumnIndex> output = new List<ColumnIndex>();
-        foreach (ColumnIndex index in _allColumns)
+        List<ColumnNumber> output = new List<ColumnNumber>();
+        foreach (ColumnNumber index in _allColumns)
         {
             if (!_isColumnFull[(int)index])
             {
@@ -148,15 +148,15 @@ public class GameBoard : MonoBehaviour
     //Terrible code think of a way to fix be my guest
     private void BuildColumnList()
     {
-        _allColumns = new List<ColumnIndex>()
+        _allColumns = new List<ColumnNumber>()
         {
-            ColumnIndex.Zero,
-            ColumnIndex.One,
-            ColumnIndex.Two,
-            ColumnIndex.Three,
-            ColumnIndex.Four,
-            ColumnIndex.Five,
-            ColumnIndex.Six
+            ColumnNumber.Zero,
+            ColumnNumber.One,
+            ColumnNumber.Two,
+            ColumnNumber.Three,
+            ColumnNumber.Four,
+            ColumnNumber.Five,
+            ColumnNumber.Six
         };
     }
     #endregion

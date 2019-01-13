@@ -7,7 +7,7 @@ using System;
 public class PiecePlacer:MonoBehaviour {
     public GameObject BlackPiece, RedPiece;
     private readonly float height = 8f;
-    private Dictionary<ColumnIndex, float> _columnIndexPlacementDictionary = new Dictionary<ColumnIndex, float>();
+    private Dictionary<ColumnNumber, float> _columnIndexPlacementDictionary = new Dictionary<ColumnNumber, float>();
     private GameBoard _gameBoard;
     private GameObject blackPiecesParent;
     private GameObject redPiecesParent;
@@ -19,7 +19,7 @@ public class PiecePlacer:MonoBehaviour {
         for (int i = 0; i < indexValues.Count;i++)
 		{
 
-            _columnIndexPlacementDictionary.Add((ColumnIndex)i, indexValues[i]);
+            _columnIndexPlacementDictionary.Add(i, indexValues[i]);
         }
     }
     public void SetPiece(Move move)
