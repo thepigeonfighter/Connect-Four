@@ -37,11 +37,9 @@ namespace ConnectFour
             _myTeam = teamName;
         }
         private ColumnIndex ChooseRandomMove(GameState gameState)
-
         {
-            List<ColumnIndex> availableColumns = gameState.AvailableColumns;
-            int index = UnityEngine.Random.Range(0, availableColumns.Count);
-            ColumnIndex randomColumn = availableColumns[index];
+            int index = UnityEngine.Random.Range(0, gameState.AvailableMoves.Count);
+            ColumnIndex randomColumn = (ColumnIndex)gameState.AvailableMoves[index].XIndex;
 
 
             return randomColumn;

@@ -102,8 +102,7 @@ namespace ConnectFour
         {
             try
             {
-                ColumnIndex validIndex = GetCurrentGameState().AvailableColumns.First(x => x == moveEvent.MyMove.Column);
-
+                GetCurrentGameState().AvailableMoves.First(x => x.XIndex == (int) moveEvent.MyMove.Column);
                 return true;
             }
             catch{
@@ -134,12 +133,33 @@ namespace ConnectFour
         #region  GameState Builder
         public GameState GetCurrentGameState()
         {
+            var currentBoard = _gameBoard.GetCurrentBoard();
+            var availableMoves = GetAvailableMoves(currentBoard);
             GameState gameState = new GameState()
             {
+#pragma warning disable 0618
                 AvailableColumns = _gameBoard.GetAvailableColumns(),
-                CurrentBoardState = _gameBoard.GetCurrentBoard()
+#pragma warning restore 0618
+                CurrentBoardState = currentBoard,
+                AvailableMoves = availableMoves
             };
             return gameState;
+        }
+        private List<BoardPosition> GetAvailableMoves(BoardPosition[,] currentBoard)
+        {
+            List<BoardPosition> availableMoves = new List<BoardPosition>();
+            for (int i = 0; i < 7; i++)
+            {
+                for (int j = 0; j < 6; j++)
+                {
+                    if(!currentBoard[i,j].IsOccupied)
+                    {
+                        availableMoves.Add(currentBoard[i, j]);
+                        break;
+                    }
+                }
+            }
+            return availableMoves;
         }
         #endregion
        

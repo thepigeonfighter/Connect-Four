@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
@@ -19,7 +17,9 @@ namespace ConnectFour
         private bool DebugBoardStateView;
         private bool MoveListView = true;
         public GameObject scrollBar;
-        private List<GameObject> _pastMoves = new List<GameObject>();
+
+
+
         public void UpdateDebugBoardState(GameState gameState)
         {
             if (DebugBoardStateView)
@@ -28,38 +28,12 @@ namespace ConnectFour
                 List<string> formattedList = FormatBoardStateToDoubleColumn(boardPostions.ToArray());
                 DebugBoardState.text = BuildFormattedList(formattedList);
             }
-            if(!DebugBoardStateView)
+            if (!DebugBoardStateView)
             {
                 DebugBoardState.text = "";
             }
-            UpdateMoveList(gameState);
         }
-        public void UpdateMoveList(GameState gameState)
-        {
-            if (MoveListView)
-            {
-                MovesLabel.SetActive(true);
-                List<BoardPosition> boardPositions = new List<BoardPosition>();
-                foreach (BoardPosition bp in gameState.CurrentBoardState)
-                {
-                    if (bp.IsOccupied)
-                    {
-                        boardPositions.Add(bp);
 
-                    }
-                }
-                if (boardPositions.Count > 0)
-                {
-                    DisplayMoveList(boardPositions);
-                }
-            }
-            else if (_pastMoves.Count > 0)
-            {
-                MovesLabel.SetActive(false);
-                _pastMoves.ForEach(x => Destroy(x));
-                _pastMoves.Clear();
-            }
-        }
         private GameObject CreateMovePrefab(string message)
         {
             GameObject gb = Instantiate(MoveTextPrefab, Vector2.zero, Quaternion.identity, MovesParent.transform);
@@ -67,17 +41,12 @@ namespace ConnectFour
             gbText.text = message;
             return gb;
         }
-        private void DisplayMoveList(List<BoardPosition> boardPositions)
+        private void DisplayMoveList(MoveEvent move)
         {
-            _pastMoves.ForEach(x => Destroy(x));
-            _pastMoves.Clear();
-            boardPositions = boardPositions.OrderBy(x => x.TimeSet).ToList();
-            foreach (BoardPosition bp in boardPositions)
-            {
-                string message = $"{bp.Owner} moved to ({bp.XIndex}, {bp.YIndex})";
-                GameObject gb = CreateMovePrefab(message);
-                _pastMoves.Add(gb);
-            }
+
+            string message = $"{move.MyMove.MyTeam} chose column number {move.MyMove.Column}";
+            CreateMovePrefab(message);
+
         }
 
         public void DisplayWinMessage(GameResult result, int turnCount)
@@ -147,6 +116,7 @@ namespace ConnectFour
         }
         public void ResetViewState()
         {
+            OnDisable();
             WinningMessage.text = "";
             DebugBoardState.text = "";
             scrollBar.GetComponent<ScrollBarController>().Reset();
@@ -163,6 +133,33 @@ namespace ConnectFour
         public void DisplayForfeitMessage(GameResult result)
         {
             WinningMessage.text = $"{result.Winner} was playing the fool and as such they have forfeited the game.";
+        }
+
+        public void UpdateMoveList(MoveEvent moveEvent)
+        {
+            if (MoveListView)
+            {
+                DisplayMoveList(moveEvent);
+            }
+        }
+        private void OnDisable()
+        {
+            if (MovesParent)
+            {
+                Transform[] children = MovesParent.GetComponentsInChildren<Transform>();
+                for (int i = 1; i < children.Length; i++)
+                {
+                    if (children[i])
+                    {
+                        Destroy(children[i].gameObject);
+                    }
+                }
+            }
+        }
+
+        public void DisplayDrawMessage()
+        {
+            WinningMessage.text = "Draw!!";
         }
     }
 }

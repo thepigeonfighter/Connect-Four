@@ -50,7 +50,8 @@ namespace ConnectFour.AI.AI_Torgo
                 }
                 else
                 {
-                    return (ColumnIndex)_selectedTarget.GetNextPosition(_currentBoard).XIndex;
+                    ColumnIndex column =  (ColumnIndex)_selectedTarget.GetNextPosition(_currentBoard).XIndex;
+                    return column;
                 }
             }
             else
@@ -61,9 +62,8 @@ namespace ConnectFour.AI.AI_Torgo
         private ColumnIndex ChooseRandomMove(GameState gameState)
 
         {
-            List<ColumnIndex> availableColumns = gameState.AvailableColumns;
-            int index = UnityEngine.Random.Range(0, availableColumns.Count);
-            ColumnIndex randomColumn = availableColumns[index];
+            int index = UnityEngine.Random.Range(0, gameState.AvailableMoves.Count);
+            ColumnIndex randomColumn =(ColumnIndex)gameState.AvailableMoves[index].XIndex;
 
 
             return randomColumn;

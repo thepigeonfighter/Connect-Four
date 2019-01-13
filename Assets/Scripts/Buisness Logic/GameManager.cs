@@ -72,6 +72,7 @@ namespace ConnectFour
         private void ReadyForNextMove(object sender, MoveEvent e)
         {
             CheckGameState();
+            _stats.UpdateMoveList(e);
             _timeToMove = true;
             _lastMove = Time.time;
         }
@@ -120,14 +121,23 @@ namespace ConnectFour
         {
             GameState gameState = _moveManager.GetCurrentGameState();
             _stats.UpdateDebugBoardState(gameState);
-            GameResult result = winChecker.CheckWin(gameState.CurrentBoardState);
-            if (result.GameStatus == GameStatus.Completed)
+            if (gameState.AvailableMoves.Count == 0)
             {
-               
-                _stats.DisplayWinMessage(result, TurnCount);
-                StartCoroutine(DisplayWinningPieces(_gameBoard.GetListofBoardPositionsInGameSpace(result.WinningPositions)));
-                ScoreKeeper.UpdateStats(result);
+                _stats.DisplayDrawMessage();
                 HandleEndOfRound();
+
+            }
+            else
+            {
+                GameResult result = winChecker.CheckWin(gameState.CurrentBoardState);
+                if (result.GameStatus == GameStatus.Completed)
+                {
+
+                    _stats.DisplayWinMessage(result, TurnCount);
+                    StartCoroutine(DisplayWinningPieces(_gameBoard.GetListofBoardPositionsInGameSpace(result.WinningPositions)));
+                    ScoreKeeper.UpdateStats(result);
+                    HandleEndOfRound();
+                }
             }
         }
         private void HandleEndOfRound()

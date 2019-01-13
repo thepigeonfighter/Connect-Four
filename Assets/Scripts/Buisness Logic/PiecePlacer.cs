@@ -6,9 +6,12 @@ using System;
 
 public class PiecePlacer:MonoBehaviour {
     public GameObject BlackPiece, RedPiece;
-    private float height = 8f;
+    private readonly float height = 8f;
     private Dictionary<ColumnIndex, float> _columnIndexPlacementDictionary = new Dictionary<ColumnIndex, float>();
     private GameBoard _gameBoard;
+    private GameObject blackPiecesParent;
+    private GameObject redPiecesParent;
+
     private void Start()
 	{
         _gameBoard = GetComponent<GameBoard>();
@@ -21,12 +24,19 @@ public class PiecePlacer:MonoBehaviour {
     }
     public void SetPiece(Move move)
 	{
-        float xPos;
-        bool exists =_columnIndexPlacementDictionary.TryGetValue(move.Column, out xPos);
+        bool exists =_columnIndexPlacementDictionary.TryGetValue(move.Column, out float xPos);
 		if(exists)
 		{
   
             GameObject parent = BuildTeamPieceContainer(move.MyTeam);
+            if(move.MyTeam == TeamName.RedTeam && !redPiecesParent)
+            {
+                redPiecesParent = parent;
+            }
+            else if (move.MyTeam == TeamName.BlackTeam && !blackPiecesParent)
+            {
+                blackPiecesParent = parent;
+            }
             GameObject pieceToPlace = GetPiece(move.MyTeam);
             Instantiate(pieceToPlace, new Vector2(xPos, height), Quaternion.identity, parent.transform);
             
@@ -55,5 +65,17 @@ public class PiecePlacer:MonoBehaviour {
             teamPieceContainer = new GameObject(teamName.ToString());
         }
         return teamPieceContainer;
+    }
+    private void OnDisable()
+    {
+        if (redPiecesParent)
+        {
+            Destroy(redPiecesParent);
+
+        }
+        if (blackPiecesParent)
+        {
+            Destroy(blackPiecesParent);
+        }
     }
 }
