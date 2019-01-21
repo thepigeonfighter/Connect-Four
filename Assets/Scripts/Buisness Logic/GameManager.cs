@@ -15,6 +15,7 @@ namespace ConnectFour
         public Toggle AutoPlayToggle;
         public float TurnDelay = .5f;
         public float TimeBetweenGames = 1;
+        public int RoundCount;
         #endregion
 
         #region Private Vars
@@ -145,8 +146,12 @@ namespace ConnectFour
             _gameBoard.ClearBoard();
             Invoke("ResetGame", 2.5f);
         }
-        private void ResetGame()
+        public void ResetGame()
         {
+            if (TurnCount>0)
+            {
+                RoundCount++;
+            }
             TurnCount = 0;
             _explosions.ForEach(x => Destroy(x));
             _explosions.Clear();

@@ -27,7 +27,10 @@ namespace ConnectFour
         {
             return _myName;
         }
-
+        public TeamName GetTeam()
+        {
+            return _myTeam;
+        }
         public override void MakeMove(ColumnNumber index)
         {
             Move move = new Move();
