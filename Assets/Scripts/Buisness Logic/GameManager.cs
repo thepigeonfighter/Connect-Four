@@ -67,13 +67,13 @@ namespace ConnectFour
         #region Events
         private void BoardFullEvent(object sender, EventArgs e)
         {
+            _stats.DisplayDrawMessage();
             HandleEndOfRound();
         }
         private void ReadyForNextMove(object sender, MoveEvent e)
         {
             CheckGameState();
             _stats.UpdateMoveList(e);
-            _timeToMove = true;
             _lastMove = Time.time;
         }
 
@@ -100,7 +100,7 @@ namespace ConnectFour
         }
         private void ExecuteMoveCall()
         {
-
+            _timeToMove = true;
             _moveManager.RequestMove();
             TurnCount++;
 
@@ -130,12 +130,7 @@ namespace ConnectFour
                 ScoreKeeper.UpdateStats(result);
                 HandleEndOfRound();
             }
-            else if (gameState.AvailableMoves.Count == 0)
-            {
-                _stats.DisplayDrawMessage();
-                HandleEndOfRound();
 
-            }
 
         }
         private void HandleEndOfRound()

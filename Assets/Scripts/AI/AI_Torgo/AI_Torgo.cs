@@ -50,14 +50,25 @@ namespace ConnectFour.AI.AI_Torgo
                 }
                 else
                 {
-                    ColumnNumber column =  _selectedTarget.GetNextPosition(_currentBoard).XIndex;
-                    return column;
+                    try
+                    {
+                        ColumnNumber column = _selectedTarget.GetNextPosition(_currentBoard).XIndex;
+                        if (column != null)
+                        {
+                            return column;
+                        }
+                    }
+                    catch
+                    {
+                        //I am so good at coding
+                    }
+                   
+                    
+                    
                 }
+              
             }
-            else
-            {
-                return ChooseRandomMove(gameState);
-            }
+            return ChooseRandomMove(gameState);
         }
         private ColumnNumber ChooseRandomMove(GameState gameState)
 

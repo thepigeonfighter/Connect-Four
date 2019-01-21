@@ -87,8 +87,8 @@ namespace ConnectFour
                 {
                     piecePlacer.SetPiece(moveEvent.MyMove);
                     _gameBoard.SetMovement(moveEvent.MyMove);
-                    SetNextTeamAsCurrent();
                     OnReadyForNextMove?.Invoke(this, moveEvent);
+                    
                 }
                 else
                 {
@@ -118,7 +118,7 @@ namespace ConnectFour
         {
             teamBlack.OnRoundCompleted();
             teamRed.OnRoundCompleted();
-
+            
             switch (_startingTeam)
             {
                 case TeamName.BlackTeam:
@@ -145,6 +145,7 @@ namespace ConnectFour
                     teamRed.OnTurnRequested(GetCurrentGameState());
                     break;
             }
+            SetNextTeamAsCurrent();
         }
         #endregion
 

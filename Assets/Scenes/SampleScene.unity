@@ -520,7 +520,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1283948665269072, guid: d18e616565f5daf41ac3c67868ab6b1b, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1283948665269072, guid: d18e616565f5daf41ac3c67868ab6b1b, type: 3}
       propertyPath: m_Name
@@ -589,8 +589,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41926f1574e624745a47b509afd76a45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 0
-  personality: 4
 --- !u!1 &476861418
 GameObject:
   m_ObjectHideFlags: 0
@@ -1481,7 +1479,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &803115614
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2339,7 +2337,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1144179187
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2560,7 +2558,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1251060925
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2872,7 +2870,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 862936321}
   m_HandleRect: {fileID: 862936320}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -3305,7 +3303,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1283948665269072, guid: d18e616565f5daf41ac3c67868ab6b1b, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1283948665269072, guid: d18e616565f5daf41ac3c67868ab6b1b, type: 3}
       propertyPath: m_Name
@@ -3374,8 +3372,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41926f1574e624745a47b509afd76a45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 1
-  personality: 0
 --- !u!1001 &1529287597
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3629,7 +3625,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 963a9a89f3ae5f94a9caffc345db080c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 100
+  speed: 44.9
 --- !u!1 &1740011618
 GameObject:
   m_ObjectHideFlags: 0
@@ -4011,7 +4007,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 100.399994, y: -148.61}
+  m_AnchoredPosition: {x: 100.399994, y: -148.60999}
   m_SizeDelta: {x: 160, y: 274.90002}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1827893938
