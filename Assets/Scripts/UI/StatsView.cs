@@ -44,7 +44,7 @@ namespace ConnectFour
         private void DisplayMoveList(MoveEvent move)
         {
 
-            string message = $"{move.MyMove.MyTeam} chose column number {move.MyMove.Column}";
+            string message = $"{move.MyMove.MyTeam} chose column number {move.MyMove.Column.Value}";
             CreateMovePrefab(message);
 
         }

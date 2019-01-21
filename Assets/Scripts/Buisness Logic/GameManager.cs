@@ -16,7 +16,7 @@ namespace ConnectFour
         public float TurnDelay = .5f;
         public float TimeBetweenGames = 1;
         #endregion
-       
+
         #region Private Vars
         private float _lastMove = 0f;
         private IMoveManager _moveManager;
@@ -63,7 +63,7 @@ namespace ConnectFour
             }
         }
         #endregion
-    
+
         #region Events
         private void BoardFullEvent(object sender, EventArgs e)
         {
@@ -107,8 +107,8 @@ namespace ConnectFour
 
         }
         #endregion
-       
-       #region  Board State Management
+
+        #region  Board State Management
         private void CheckForAutoPlay()
         {
             if (AutoPlayToggle.isOn)
@@ -121,24 +121,22 @@ namespace ConnectFour
         {
             GameState gameState = _moveManager.GetCurrentGameState();
             _stats.UpdateDebugBoardState(gameState);
-            if (gameState.AvailableMoves.Count == 0)
+
+            GameResult result = winChecker.CheckWin(gameState.CurrentBoardState);
+            if (result.GameStatus == GameStatus.Completed)
+            {
+                _stats.DisplayWinMessage(result, TurnCount);
+                StartCoroutine(DisplayWinningPieces(_gameBoard.GetListofBoardPositionsInGameSpace(result.WinningPositions)));
+                ScoreKeeper.UpdateStats(result);
+                HandleEndOfRound();
+            }
+            else if (gameState.AvailableMoves.Count == 0)
             {
                 _stats.DisplayDrawMessage();
                 HandleEndOfRound();
 
             }
-            else
-            {
-                GameResult result = winChecker.CheckWin(gameState.CurrentBoardState);
-                if (result.GameStatus == GameStatus.Completed)
-                {
 
-                    _stats.DisplayWinMessage(result, TurnCount);
-                    StartCoroutine(DisplayWinningPieces(_gameBoard.GetListofBoardPositionsInGameSpace(result.WinningPositions)));
-                    ScoreKeeper.UpdateStats(result);
-                    HandleEndOfRound();
-                }
-            }
         }
         private void HandleEndOfRound()
         {

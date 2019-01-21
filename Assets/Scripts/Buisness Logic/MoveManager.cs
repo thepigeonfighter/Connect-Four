@@ -15,7 +15,8 @@ namespace ConnectFour
         public EventHandler<bool> OnTeamsRegisteredEvent { get; set; }
         public EventHandler<MoveEvent> OnReadyForNextMove { get; set; }
 
-        public EventHandler<TeamName> OnGameForfeit{get;set;}
+        public EventHandler<TeamName> OnGameForfeit { get; set; }
+
         #endregion
 
         #region  Private Vars
@@ -25,6 +26,8 @@ namespace ConnectFour
         private GUID teamRedId;
         private GameBoard _gameBoard;
         private PiecePlacer piecePlacer;
+        private TeamName _startingTeam;
+
         #endregion
 
         #region  Player Registration
@@ -87,8 +90,9 @@ namespace ConnectFour
                     SetNextTeamAsCurrent();
                     OnReadyForNextMove?.Invoke(this, moveEvent);
                 }
-                else{
-                    
+                else
+                {
+
                     OnGameForfeit?.Invoke(this, CurrentTeam);
                 }
             }
@@ -102,10 +106,11 @@ namespace ConnectFour
         {
             try
             {
-                GetCurrentGameState().AvailableMoves.First(x => x.XIndex == (int) moveEvent.MyMove.Column);
+                GetCurrentGameState().AvailableMoves.First(x => x.XIndex == (int)moveEvent.MyMove.Column);
                 return true;
             }
-            catch{
+            catch
+            {
                 return false;
             }
         }
@@ -113,6 +118,19 @@ namespace ConnectFour
         {
             teamBlack.OnRoundCompleted();
             teamRed.OnRoundCompleted();
+
+            switch (_startingTeam)
+            {
+                case TeamName.BlackTeam:
+                    CurrentTeam = TeamName.RedTeam;
+                    _startingTeam = TeamName.RedTeam;
+                    break;
+                case TeamName.RedTeam:
+                    CurrentTeam = TeamName.BlackTeam;
+                    _startingTeam = TeamName.BlackTeam;
+                    break;
+            }
+
         }
 
         //This should tell the current player that they need to move
@@ -129,7 +147,7 @@ namespace ConnectFour
             }
         }
         #endregion
-        
+
         #region  GameState Builder
         public GameState GetCurrentGameState()
         {
@@ -152,7 +170,7 @@ namespace ConnectFour
             {
                 for (int j = 0; j < 6; j++)
                 {
-                    if(!currentBoard[i,j].IsOccupied)
+                    if (!currentBoard[i, j].IsOccupied)
                     {
                         availableMoves.Add(currentBoard[i, j]);
                         break;
@@ -162,13 +180,17 @@ namespace ConnectFour
             return availableMoves;
         }
         #endregion
-       
+
         #region  Internal Buisness Methods
         void Start()
         {
             _gameBoard = GetComponent<GameBoard>();
             piecePlacer = GetComponent<PiecePlacer>();
+
+            CurrentTeam = TeamName.RedTeam;
+            _startingTeam = CurrentTeam;
         }
+
         private void SetNextTeamAsCurrent()
         {
             switch (CurrentTeam)
