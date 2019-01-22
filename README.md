@@ -30,6 +30,7 @@ three methods
           {
               public BoardPosition[,] CurrentBoardState{ get; set; }
               public List<ColumnIndex> AvailableColumns{ get; set; }
+	      public List<BoardPosition> AvailableMoves{get;set;}
           }
           Use the current board state to decide where your next move should be placed. 
           Each boardPosition has the following information:
