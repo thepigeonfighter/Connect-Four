@@ -8,9 +8,7 @@ namespace ConnectFour
     public class StatsView : MonoBehaviour, IStatsView
     {
         public Text WinningMessage;
-        public Text DebugBoardState;
         public GameObject MovesLabel;
-        public Toggle DebugBoardStateToggle;
         public Toggle MoveListViewToggle;
         public GameObject MovesParent;
         public GameObject MoveTextPrefab;
@@ -26,11 +24,6 @@ namespace ConnectFour
             {
                 List<string> boardPostions = GetUnformattedBoardState(gameState);
                 List<string> formattedList = FormatBoardStateToDoubleColumn(boardPostions.ToArray());
-                DebugBoardState.text = BuildFormattedList(formattedList);
-            }
-            if (!DebugBoardStateView)
-            {
-                DebugBoardState.text = "";
             }
         }
 
@@ -64,14 +57,7 @@ namespace ConnectFour
             }
             return boardPostions;
         }
-        private string BuildFormattedList(List<string> formattedList)
-        {
-            StringBuilder stringBuilder = new StringBuilder();
-            formattedList.ForEach(x => stringBuilder.Append(x));
-            string boardState = stringBuilder.ToString();
-            boardState = boardState.Replace("@", System.Environment.NewLine);
-            return boardState;
-        }
+
         private List<string> FormatBoardStateToDoubleColumn(string[] allPositions)
         {
             string[] firstCol = allPositions.Take((allPositions.Length) / 2).ToArray();
@@ -118,12 +104,7 @@ namespace ConnectFour
         {
             OnDisable();
             WinningMessage.text = "";
-            DebugBoardState.text = "";
             scrollBar.GetComponent<ScrollBarController>().Reset();
-        }
-        public void SetDebugBoardStateViews()
-        {
-            DebugBoardStateView = DebugBoardStateToggle.isOn;
         }
         public void SetMoveListView()
         {
