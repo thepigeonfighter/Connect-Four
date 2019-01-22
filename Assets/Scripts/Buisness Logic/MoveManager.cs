@@ -136,6 +136,7 @@ namespace ConnectFour
         //This should tell the current player that they need to move
         public void RequestMove()
         {
+            SetNextTeamAsCurrent();
             switch (CurrentTeam)
             {
                 case TeamName.BlackTeam:
@@ -145,7 +146,7 @@ namespace ConnectFour
                     teamRed.OnTurnRequested(GetCurrentGameState());
                     break;
             }
-            SetNextTeamAsCurrent();
+            
         }
         #endregion
 

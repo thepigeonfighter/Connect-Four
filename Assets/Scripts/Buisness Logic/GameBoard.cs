@@ -8,7 +8,6 @@ public class GameBoard : MonoBehaviour
 {
     #region  Public Vars
     public GameObject BottomCollider;
-    public EventHandler OnBoardFullEvent;
     #endregion
 
     #region  Private Vars
@@ -137,7 +136,6 @@ public class GameBoard : MonoBehaviour
             }
         }
         _boardFull = true;
-        OnBoardFullEvent?.Invoke(this, EventArgs.Empty);
 
     }
     private void EnableBottomCollider()

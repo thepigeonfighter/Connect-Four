@@ -40,7 +40,6 @@ namespace ConnectFour
             _moveManager.OnTeamsRegisteredEvent += StartGame;
             _moveManager.OnReadyForNextMove += ReadyForNextMove;
             _moveManager.OnGameForfeit += OnGameForfeit;
-            _gameBoard.OnBoardFullEvent += BoardFullEvent;
 
         }
 
@@ -66,11 +65,6 @@ namespace ConnectFour
         #endregion
 
         #region Events
-        private void BoardFullEvent(object sender, EventArgs e)
-        {
-            _stats.DisplayDrawMessage();
-            HandleEndOfRound();
-        }
         private void ReadyForNextMove(object sender, MoveEvent e)
         {
             CheckGameState();
@@ -129,6 +123,11 @@ namespace ConnectFour
                 _stats.DisplayWinMessage(result, TurnCount);
                 StartCoroutine(DisplayWinningPieces(_gameBoard.GetListofBoardPositionsInGameSpace(result.WinningPositions)));
                 ScoreKeeper.UpdateStats(result);
+                HandleEndOfRound();
+            }
+            else if(gameState.AvailableMoves.Count == 0)
+            {
+                _stats.DisplayDrawMessage();
                 HandleEndOfRound();
             }
 

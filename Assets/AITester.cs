@@ -1,5 +1,5 @@
 ﻿using ConnectFour;
-using ConnectFour.AI.AI_Friar;
+//using ConnectFour.AI.AI_Friar;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
