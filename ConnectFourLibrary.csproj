@@ -9,7 +9,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{DDD214CB-4024-5B97-C156-9325ED5D7DBD}</ProjectGuid>
+    <ProjectGuid>{67902CA8-7542-7A78-1FBD-B4562AD699EC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>ConnectFourLibrary</AssemblyName>
@@ -60,6 +60,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\AI\AI_Friar\AI_Friar.cs" />
+    <Compile Include="Assets\Scripts\AI\AI_Friar\CheckMovesToWin.cs" />
+    <Compile Include="Assets\Scripts\AI\AI_Friar\CheckPreventativeMoves.cs" />
+    <Compile Include="Assets\Scripts\AI\AI_Friar\CheckTargetCount.cs" />
     <Compile Include="Assets\Scripts\AI\AI_Random.cs" />
     <Compile Include="Assets\Scripts\AI\AI_Torgo\AI_Torgo.cs" />
     <Compile Include="Assets\Scripts\AI\AI_Torgo\Option.cs" />
@@ -74,6 +78,7 @@
     <Compile Include="Assets\Scripts\AI\Human\HumanPlayer_Base.cs" />
     <Compile Include="Assets\Scripts\AI\Human\IHuman.cs" />
     <Compile Include="Assets\Scripts\Buisness Logic\AdjectiveHolder.cs" />
+    <Compile Include="Assets\Scripts\Buisness Logic\AITester.cs" />
     <Compile Include="Assets\Scripts\Buisness Logic\BoardBuilder.cs" />
     <Compile Include="Assets\Scripts\Buisness Logic\BoardPosition.cs" />
     <Compile Include="Assets\Scripts\Buisness Logic\CheckForWin.cs" />
@@ -324,9 +329,6 @@
     <Reference Include="UnityEditor.Android.Extensions">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2018.3.0f2/Editor/Data/PlaybackEngines/AndroidPlayer/UnityEditor.Android.Extensions.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEditor.WSA.Extensions">
-      <HintPath>C:/Program Files/Unity/Hub/Editor/2018.3.0f2/Editor/Data/PlaybackEngines/MetroSupport/UnityEditor.WSA.Extensions.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEditor.WindowsStandalone.Extensions">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2018.3.0f2/Editor/Data/PlaybackEngines/windowsstandalonesupport/UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
     </Reference>
@@ -334,25 +336,25 @@
       <HintPath>C:/Program Files (x86)/Microsoft Visual Studio Tools for Unity/15.0/Editor/SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.Advertisements">
-      <HintPath>F:/UnityRepo/Connect Four/Library/PackageCache/com.unity.ads@2.3.1/Editor/UnityEditor.Advertisements.dll</HintPath>
+      <HintPath>L:/Game Design/Repos/connect-four/Library/PackageCache/com.unity.ads@2.3.1/Editor/UnityEditor.Advertisements.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.Advertisements">
-      <HintPath>F:/UnityRepo/Connect Four/Library/PackageCache/com.unity.ads@2.3.1/Runtime/UnityEngine.Advertisements.dll</HintPath>
+      <HintPath>L:/Game Design/Repos/connect-four/Library/PackageCache/com.unity.ads@2.3.1/Runtime/UnityEngine.Advertisements.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.Advertisements.Editor">
-      <HintPath>F:/UnityRepo/Connect Four/Library/PackageCache/com.unity.ads@2.3.1/Runtime/UnityEngine.Advertisements.Editor.dll</HintPath>
+      <HintPath>L:/Game Design/Repos/connect-four/Library/PackageCache/com.unity.ads@2.3.1/Runtime/UnityEngine.Advertisements.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.Editor">
-      <HintPath>F:/UnityRepo/Connect Four/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.Editor.dll</HintPath>
+      <HintPath>L:/Game Design/Repos/connect-four/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.StandardEvents">
-      <HintPath>F:/UnityRepo/Connect Four/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.StandardEvents.dll</HintPath>
+      <HintPath>L:/Game Design/Repos/connect-four/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.StandardEvents.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.Tracker">
-      <HintPath>F:/UnityRepo/Connect Four/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.Tracker.dll</HintPath>
+      <HintPath>L:/Game Design/Repos/connect-four/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.Tracker.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.Purchasing">
-      <HintPath>F:/UnityRepo/Connect Four/Library/PackageCache/com.unity.purchasing@2.0.3/Editor/UnityEditor.Purchasing.dll</HintPath>
+      <HintPath>L:/Game Design/Repos/connect-four/Library/PackageCache/com.unity.purchasing@2.0.3/Editor/UnityEditor.Purchasing.dll</HintPath>
     </Reference>
     <Reference Include="netstandard">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2018.3.0f2/Editor/Data/NetStandard/ref/2.0.0/netstandard.dll</HintPath>

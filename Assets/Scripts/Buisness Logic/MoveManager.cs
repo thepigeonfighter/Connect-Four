@@ -14,6 +14,7 @@ namespace ConnectFour
         public TeamName CurrentTeam = TeamName.BlackTeam;
         public EventHandler<bool> OnTeamsRegisteredEvent { get; set; }
         public EventHandler<MoveEvent> OnReadyForNextMove { get; set; }
+        public AITester tester;
 
         public EventHandler<TeamName> OnGameForfeit { get; set; }
 
@@ -40,6 +41,7 @@ namespace ConnectFour
                 player.OnMoveComplete += OnPlayerMoveCompleted;
                 teamBlackId = GetNewGUID();
                 player.SignUp(teamBlackId);
+                tester.teamBlack = (AI_Base)player;
                 print("Team Black is being played by " + player.GetName() + " with the security id of " + teamBlackId.ToString());
             }
             else if (teamRed == null)
@@ -48,6 +50,7 @@ namespace ConnectFour
                 teamRed = player;
                 teamRedId = GetNewGUID();
                 player.SignUp(teamRedId);
+                tester.teamRed = (AI_Base)player;
                 print("Team Red is being played by " + player.GetName() + " with the security id of " + teamRedId.ToString());
                 player.OnMoveComplete += OnPlayerMoveCompleted;
                 OnTeamsRegisteredEvent?.Invoke(this, true);

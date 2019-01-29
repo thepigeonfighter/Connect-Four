@@ -1,13 +1,11 @@
 ﻿using ConnectFour;
-//using ConnectFour.AI.AI_Friar;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class AITester : MonoBehaviour
 {
-    public AI_Base teamA;
-    public AI_Base teamB;
+    public AI_Base teamBlack;
+    public AI_Base teamRed;
     public int testSpeed;
     public int iterationsPerTest;
 
@@ -27,7 +25,7 @@ public class AITester : MonoBehaviour
         gameManager = FindObjectOfType<GameManager>();
         gameSpeedController = FindObjectOfType<GameSpeedController>();
 
-        switch (teamA.GetTeam())
+        switch (teamBlack.GetTeam())
         {
             case TeamName.BlackTeam:
                 teamAStats = ScoreKeeper.GetBlackTeamStats();
@@ -54,7 +52,6 @@ public class AITester : MonoBehaviour
         {
             if (gameManager.RoundCount > testCount)
             {
-                Debug.Log(testCount + 1 + " rounds completed");
                 gameManager.AutoPlayToggle.isOn = false;
                 testingActive = false;
                 Invoke("GetResults", 20f);
@@ -66,10 +63,13 @@ public class AITester : MonoBehaviour
     {
         var teamAResult = teamAStats.WinCount;
         var teamBResult = teamBStats.WinCount;
-        var resultString = teamAResult > teamBResult ? teamA._myName + " (" + teamA.GetTeam() + ")" : teamB._myName + " (" + teamB.GetTeam() + ")";
         var results = new List<int> { teamAResult, teamBResult };
         results.Sort();
-        Debug.Log(resultString + " won the test " + results[1] + "/" + results[0]);
+        var resultString = teamAResult > teamBResult ? teamBlack._myName + " (" + teamBlack.GetTeam() + ")" : teamRed._myName + " (" + teamRed.GetTeam() + ")";
+        var percentBetter = (Mathf.Round((float)(results[1] - results[0]) / results[0] * 100));
+
+        Debug.Log(testCount + 1 + " rounds completed");
+        Debug.Log(resultString + " won the test " + results[1] + "/" + results[0] + ", performing " + percentBetter + "% better.");
     }
 
     void StartNewTest()
@@ -80,5 +80,4 @@ public class AITester : MonoBehaviour
         gameManager.RoundCount = 0;
         testingActive = true;
     }
-
 }

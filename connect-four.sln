@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConnectFourLibrary", "ConnectFourLibrary.csproj", "{67902CA8-7542-7A78-1FBD-B4562AD699EC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{7C753480-A8F1-4CB7-C83E-4408EC98D5F0}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests.csproj", "{6053DFEF-EEA6-B900-5839-92279CBC4CEE}"
 EndProject
 Global
@@ -17,10 +15,6 @@ Global
 		{67902CA8-7542-7A78-1FBD-B4562AD699EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{67902CA8-7542-7A78-1FBD-B4562AD699EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{67902CA8-7542-7A78-1FBD-B4562AD699EC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7C753480-A8F1-4CB7-C83E-4408EC98D5F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7C753480-A8F1-4CB7-C83E-4408EC98D5F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7C753480-A8F1-4CB7-C83E-4408EC98D5F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7C753480-A8F1-4CB7-C83E-4408EC98D5F0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6053DFEF-EEA6-B900-5839-92279CBC4CEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6053DFEF-EEA6-B900-5839-92279CBC4CEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6053DFEF-EEA6-B900-5839-92279CBC4CEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
