@@ -70,6 +70,7 @@ namespace ConnectFour
             CheckGameState();
             _stats.UpdateMoveList(e);
             _lastMove = Time.time;
+            _timeToMove = true;
         }
 
         private void StartGame(object sender, bool e)
@@ -95,7 +96,6 @@ namespace ConnectFour
         }
         private void ExecuteMoveCall()
         {
-            _timeToMove = true;
             _moveManager.RequestMove();
             TurnCount++;
 
@@ -115,7 +115,6 @@ namespace ConnectFour
         private void CheckGameState()
         {
             GameState gameState = _moveManager.GetCurrentGameState();
-            _stats.UpdateDebugBoardState(gameState);
 
             GameResult result = winChecker.CheckWin(gameState.CurrentBoardState);
             if (result.GameStatus == GameStatus.Completed)

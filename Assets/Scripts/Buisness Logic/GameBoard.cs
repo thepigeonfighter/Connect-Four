@@ -35,7 +35,28 @@ public class GameBoard : MonoBehaviour
 
     public BoardPosition[,] GetCurrentBoard()
     {
-        return _currentBoardState;
+        return CloneBoard();
+    }
+    private BoardPosition[,] CloneBoard()
+    {
+        BoardPosition[,] newBoard = new BoardPosition[7, 6];
+        for (int i = 0; i < 7; i++)
+        {
+            for (int j = 0; j < 6; j++)
+            {
+                newBoard[i, j] = new BoardPosition
+                {
+                    IsOccupied = _currentBoardState[i,j].IsOccupied,
+                    Owner = _currentBoardState[i, j].Owner,
+                    Player = _currentBoardState[i, j].Player,
+                    Position = _currentBoardState[i, j].Position,
+                    TimeSet = _currentBoardState[i, j].TimeSet,
+                    XIndex = _currentBoardState[i, j].XIndex,
+                    YIndex = _currentBoardState[i, j].YIndex
+                };
+            }
+        }
+        return newBoard;
     }
     public void SetMovement(Move move)
     {

@@ -41,7 +41,14 @@ namespace ConnectFour
                 player.OnMoveComplete += OnPlayerMoveCompleted;
                 teamBlackId = GetNewGUID();
                 player.SignUp(teamBlackId);
-                tester.teamBlack = (AI_Base)player;
+                try
+                {
+                    tester.teamBlack = (AI_Base)player;
+                }catch(InvalidCastException)
+                {
+                    Debug.Log("Team Black cannont be tested properly as it does not inherit from AI_Base.");
+                }
+               
                 print("Team Black is being played by " + player.GetName() + " with the security id of " + teamBlackId.ToString());
             }
             else if (teamRed == null)
@@ -50,7 +57,14 @@ namespace ConnectFour
                 teamRed = player;
                 teamRedId = GetNewGUID();
                 player.SignUp(teamRedId);
-                tester.teamRed = (AI_Base)player;
+                try
+                {
+                    tester.teamRed = (AI_Base)player;
+                }
+                catch(InvalidCastException)
+                {
+                    Debug.Log("Team Red cannont be tested properly as it does not inherit from AI_Base.");
+                }
                 print("Team Red is being played by " + player.GetName() + " with the security id of " + teamRedId.ToString());
                 player.OnMoveComplete += OnPlayerMoveCompleted;
                 OnTeamsRegisteredEvent?.Invoke(this, true);
