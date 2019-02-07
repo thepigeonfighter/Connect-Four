@@ -12,20 +12,9 @@ namespace ConnectFour
         public Toggle MoveListViewToggle;
         public GameObject MovesParent;
         public GameObject MoveTextPrefab;
-        private bool DebugBoardStateView;
         private bool MoveListView = true;
         public GameObject scrollBar;
 
-
-
-        public void UpdateDebugBoardState(GameState gameState)
-        {
-            if (DebugBoardStateView)
-            {
-                List<string> boardPostions = GetUnformattedBoardState(gameState);
-                List<string> formattedList = FormatBoardStateToDoubleColumn(boardPostions.ToArray());
-            }
-        }
 
         private GameObject CreateMovePrefab(string message)
         {
@@ -45,7 +34,7 @@ namespace ConnectFour
         public void DisplayWinMessage(GameResult result, int turnCount)
         {
             string winType = GetWinTypeWord(result.WinType);
-            string winWord = AdjectiveHolder.GetVictoryWord();//
+            string winWord = AdjectiveHolder.GetVictoryWord();
             WinningMessage.text = ($"{GetAdjective(turnCount)} {winType} {winWord} by {result.Player.GetName()} in {turnCount} turns");
         }
         private List<string> GetUnformattedBoardState(GameState gameState)

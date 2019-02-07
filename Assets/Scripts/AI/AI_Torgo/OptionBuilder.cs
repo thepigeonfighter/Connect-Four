@@ -1,24 +1,25 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 namespace ConnectFour.AI.AI_Torgo
 {
 
     public class OptionBuilder
     {
-        TeamName _myTeam;
+        private TeamName _myTeam;
         public OptionBuilder(TeamName myTeam)
         {
             _myTeam = myTeam;
         }
-        public Option BuildOption(BoardPosition boardPosition, BoardPosition[,] _currentBoard, List<Target> previousTargets)
+        public Option BuildOption(BoardPosition boardPosition, BoardPosition[,] _currentBoard, List<Target> previousTargets = null)
         {
             Option option = new Option();
             option.MyPosition = boardPosition;
             option.Targets = SetTargets(boardPosition, _currentBoard);
             option.AvailableTargets = option.Targets.Count;
-            option.IsTarget = IsThisOptionAlreadyATarget(boardPosition, previousTargets);
+            if (previousTargets != null)
+            {
+                option.IsTarget = IsThisOptionAlreadyATarget(boardPosition, previousTargets);
+            }
 
             return option;
         }
@@ -27,7 +28,7 @@ namespace ConnectFour.AI.AI_Torgo
             TargetBuilder builder = new TargetBuilder(_currentBoard);
             List<Target> targets = new List<Target>();
             List<TargetNames> targetNames = GetTargetNamesForBoardPosition(boardPosition);
-            foreach(TargetNames name in targetNames)
+            foreach (TargetNames name in targetNames)
             {
                 Target target = builder.BuildTarget(boardPosition, name);
                 if (target.CheckIfTargetValid(_currentBoard, _myTeam))
@@ -48,7 +49,7 @@ namespace ConnectFour.AI.AI_Torgo
                 targetNames = GetTargetNamesForLeftSide(boardPosition.YIndex);
             }
             else if (boardPosition.XIndex == 3)
-            {   
+            {
                 targetNames = GetTargetNamesOnCenter(boardPosition.YIndex);
             }
             else if (boardPosition.XIndex > 3)
@@ -135,7 +136,7 @@ namespace ConnectFour.AI.AI_Torgo
                 return false;
             }
         }
-      
+
     }
 
 }

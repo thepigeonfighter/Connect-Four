@@ -34,6 +34,19 @@ namespace ConnectFour.AI.AI_Torgo
 
             return fourCost;
         }
+        public int FourChance(BoardPosition[,] currentBoard, TeamName myTeam)
+        {
+            int fourCompleted = 0;
+            foreach (var bp in Path)
+            {
+                if(currentBoard[bp.XIndex,bp.YIndex].IsOccupied)
+                {
+                    fourCompleted++;
+                }
+            }
+            fourCompleted *= 4;
+            return fourCompleted;
+        }
 		public BoardPosition GetNextPosition(BoardPosition[,] currentBoard)
 		{
 			if(!currentBoard[Source.XIndex,Source.YIndex].IsOccupied)
@@ -51,7 +64,19 @@ namespace ConnectFour.AI.AI_Torgo
 			}
             return null;
         }
-		
+        public override bool Equals(object obj)
+        {
+            if(obj ==null || this.GetType() != obj.GetType())
+            {
+                return false;
+            }
+            Target target = (Target)obj;
+            return target.TargetPosition == this.TargetPosition;
+        }
+        public override int GetHashCode()
+        {
+            return (TargetPosition.XIndex << 3) ^ TargetPosition.YIndex;
+        }
 
     }
 }

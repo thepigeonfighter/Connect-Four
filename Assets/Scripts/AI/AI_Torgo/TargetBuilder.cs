@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 namespace ConnectFour.AI.AI_Torgo
 {
     public class TargetBuilder
@@ -78,7 +76,7 @@ namespace ConnectFour.AI.AI_Torgo
                     {
                         newX = xDiff + i;
                     }
-                    
+
                 }
                 newX += _sourcePosition.XIndex;
                 if (yDiff != 0)
@@ -91,7 +89,7 @@ namespace ConnectFour.AI.AI_Torgo
                     {
                         newY = yDiff + i;
                     }
-                    
+
                 }
                 newY += _sourcePosition.YIndex;
                 path.Add(_currentBoard[newX, newY]);
@@ -104,30 +102,27 @@ namespace ConnectFour.AI.AI_Torgo
         //of moves that will be necessary in order to fill path 
         private List<BoardPosition> GetRequiredMovesList(List<BoardPosition> path)
         {
-            List<BoardPosition> allMovesBelowPath = new List<BoardPosition>();
+                     
             List<BoardPosition> requiredMoves = new List<BoardPosition>();
+            if (path[0].XIndex == path[1].XIndex) { return requiredMoves; }
             foreach (BoardPosition bp in path)
             {
                 for (int i = 1; i < bp.YIndex + 1; i++)
                 {
                     BoardPosition pos = _currentBoard[bp.XIndex, bp.YIndex - i];
+
                     if (!path.Contains(pos))
                     {
-                        allMovesBelowPath.Add(pos);
+                        if (!pos.IsOccupied)
+                        {
+                            requiredMoves.Add(pos);
+                        }
                     }
+                    
                 }
             }
-            foreach (BoardPosition bp in allMovesBelowPath)
-            {
-                
-                if (!bp.IsOccupied )
-                {
-                    requiredMoves.Add(bp);
-                }
-            }
-
-
             return requiredMoves;
         }
+        
     }
 }
