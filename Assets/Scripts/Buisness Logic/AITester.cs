@@ -40,7 +40,8 @@ public class AITester : MonoBehaviour
         teamAStats = ScoreKeeper.GetBlackTeamStats();
         teamBStats = ScoreKeeper.GetRedTeamStats();
 
-        gameSpeedController.speed = testSpeed;
+        //The gameSpeedController no longer uses this property. I am not hooking this up because AIs are no longer under development
+        //gameSpeedController.speed = testSpeed;
 
         StartNewTest();
     }

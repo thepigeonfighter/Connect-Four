@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using System;
 using System.Linq;
@@ -14,7 +13,6 @@ namespace ConnectFour
         public TeamName CurrentTeam = TeamName.BlackTeam;
         public EventHandler<bool> OnTeamsRegisteredEvent { get; set; }
         public EventHandler<MoveEvent> OnReadyForNextMove { get; set; }
-        public AITester tester;
 
         public EventHandler<TeamName> OnGameForfeit { get; set; }
 
@@ -23,8 +21,8 @@ namespace ConnectFour
         #region  Private Vars
         private IPlayer teamBlack;
         private IPlayer teamRed;
-        private GUID teamBlackId;
-        private GUID teamRedId;
+        private Guid teamBlackId;
+        private Guid teamRedId;
         private GameBoard _gameBoard;
         private PiecePlacer piecePlacer;
         private TeamName _startingTeam;
@@ -41,14 +39,6 @@ namespace ConnectFour
                 player.OnMoveComplete += OnPlayerMoveCompleted;
                 teamBlackId = GetNewGUID();
                 player.SignUp(teamBlackId);
-                try
-                {
-                    tester.teamBlack = (AI_Base)player;
-                }catch(InvalidCastException)
-                {
-                    Debug.Log("Team Black cannont be tested properly as it does not inherit from AI_Base.");
-                }
-               
                 print("Team Black is being played by " + player.GetName() + " with the security id of " + teamBlackId.ToString());
             }
             else if (teamRed == null)
@@ -57,16 +47,9 @@ namespace ConnectFour
                 teamRed = player;
                 teamRedId = GetNewGUID();
                 player.SignUp(teamRedId);
-                try
-                {
-                    tester.teamRed = (AI_Base)player;
-                }
-                catch(InvalidCastException)
-                {
-                    Debug.Log("Team Red cannont be tested properly as it does not inherit from AI_Base.");
-                }
                 print("Team Red is being played by " + player.GetName() + " with the security id of " + teamRedId.ToString());
                 player.OnMoveComplete += OnPlayerMoveCompleted;
+                ScoreKeeper.SetPlayers(teamRed, teamBlack);
                 OnTeamsRegisteredEvent?.Invoke(this, true);
             }
             else
@@ -74,7 +57,7 @@ namespace ConnectFour
                 print("No more players allowed at this time!");
             }
         }
-        private GUID GetValidGUID(TeamName name)
+        private Guid GetValidGUID(TeamName name)
         {
             switch (name)
             {
@@ -83,12 +66,12 @@ namespace ConnectFour
                 case TeamName.RedTeam:
                     return teamRedId;
                 default:
-                    return new GUID();
+                    return new Guid();
             }
         }
-        private GUID GetNewGUID()
+        private Guid GetNewGUID()
         {
-            return GUID.Generate();
+            return Guid.NewGuid();
         }
         #endregion
 
@@ -97,7 +80,7 @@ namespace ConnectFour
         //It should be able to verify the move is valid
         public void OnPlayerMoveCompleted(object sender, MoveEvent moveEvent)
         {
-            GUID expectedId = GetValidGUID(CurrentTeam);
+            Guid expectedId = GetValidGUID(CurrentTeam);
             if (expectedId == moveEvent.MySecurityHandle)
             {
                 if (ValidateMove(moveEvent))

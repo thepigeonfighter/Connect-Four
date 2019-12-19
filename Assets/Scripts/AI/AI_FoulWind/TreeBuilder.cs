@@ -11,7 +11,12 @@ namespace ConnectFour.AI.AI_FoulWind
         private TeamName _myTeam;
         public TreeBuilder(TeamName myTeam, int depth)
         {
-            int nodeCount = Mathf.RoundToInt(Mathf.Pow(8, depth ));
+            int nodeCount = 0;
+            for (int i = 1; i <= depth; i++)
+            {
+                nodeCount += Mathf.RoundToInt(Mathf.Pow(7, i));
+            }
+            nodeCount+=7;
             nodes = new Position[nodeCount];
             BoardPosition[,] emptyBoard = new BoardPosition[7, 6];
             for (int i = 0; i < nodeCount; i++)

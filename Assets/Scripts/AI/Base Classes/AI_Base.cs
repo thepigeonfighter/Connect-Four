@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 namespace ConnectFour
 {
@@ -11,7 +8,7 @@ namespace ConnectFour
         protected TeamName _myTeam;
         public string _myName = "Random AI";
         public bool PickRandomName = true;
-        protected GUID _mySecurityHandle;
+        protected Guid _mySecurityHandle;
         private IBrain brain;
         public EventHandler<MoveEvent> OnMoveComplete { get; set; }
         private void Start()
@@ -33,6 +30,7 @@ namespace ConnectFour
         }
         public override void MakeMove(ColumnNumber index)
         {
+           
             Move move = new Move();
             move.Column = index;
             move.MyTeam = _myTeam;
@@ -51,6 +49,7 @@ namespace ConnectFour
 
         public void OnTurnRequested(GameState gameState)
         {
+            MessageBoard.Instance.ShowMessage(_myName + " is making a move.");
             MakeMove(brain.ChooseColumnIndex(gameState));
         }
 
@@ -65,7 +64,7 @@ namespace ConnectFour
             _myName = name;
         }
 
-        public override void SignUp(GUID securityKey)
+        public override void SignUp(Guid securityKey)
         {
             _mySecurityHandle = securityKey;
         }

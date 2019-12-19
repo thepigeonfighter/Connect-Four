@@ -283,6 +283,7 @@ namespace ConnectFour.AI.AI_Friar
 
         }
 
+#if UNITY_EDITOR
         private void OnDrawGizmos()
         {
             #region Draw gizmos
@@ -307,7 +308,8 @@ namespace ConnectFour.AI.AI_Friar
                 }
             }
             #endregion
-        }
+        } 
+#endif
 
         public void SetTeam(TeamName teamName)
         {

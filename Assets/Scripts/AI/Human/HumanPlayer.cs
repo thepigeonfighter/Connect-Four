@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -9,47 +10,30 @@ namespace ConnectFour
     public class HumanPlayer : MonoBehaviour, IHuman
     {
         public GameObject AvailableMoves;
-        public bool LimitTurnTime = false;
-        public int TurnTimeSeconds = 60;
 
         private bool _timeToMove;
         private ColumnNumber _choosenColumn;
         private GameState _gameState;
-
-        public async Task<ColumnNumber> GetDesiredMoveAsync(GameState gameState)
+        private Action<ColumnNumber> _onTurnChosen;
+        public void GetMove(GameState gameState,Action<ColumnNumber> callback)
         {
             _gameState = gameState;
             _timeToMove = true;
             DisplayColumnOptions();
-            if(LimitTurnTime)
-            {
-                await WaitForLimitedTime();
-            }
-            else
-            {
-                await WaitForEver();
-            }
-            return _choosenColumn;
+            _onTurnChosen = callback;
+            StopAllCoroutines();
+            StartCoroutine(WaitForMove());
         }
-        public async Task WaitForEver()
+        private IEnumerator WaitForMove()
         {
-            while (_timeToMove)
+            while(_timeToMove)
             {
-                await Task.Delay(200);
+                yield return null;
             }
+            _onTurnChosen?.Invoke(_choosenColumn);
 
         }
-        public async Task WaitForLimitedTime()
-        {
-            int tries = 0;
-            int timeOut = TurnTimeSeconds * 5;
-            while (_timeToMove && tries < timeOut)
-            {
-                tries++;
-                await Task.Delay(200);
-            }
 
-        }
         //This needs to be public so the buttons can access this script
         public void SetCapturedMove(int columnIndex)
         {
@@ -67,7 +51,7 @@ namespace ConnectFour
                 }
                 catch
                 {
-                    Debug.Log("Column is full pick another one");
+                    MessageBoard.Instance.ShowMessage("Column is full pick another one");
                 }
             
 

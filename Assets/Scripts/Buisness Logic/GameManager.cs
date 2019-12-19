@@ -5,6 +5,8 @@ using System.Text;
 using UnityEngine;
 using System.Linq;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+
 namespace ConnectFour
 {
     [RequireComponent(typeof(IMoveManager))]
@@ -13,6 +15,7 @@ namespace ConnectFour
         #region Public Vars
         public GameObject explosion;
         public Toggle AutoPlayToggle;
+        public Button ClearBoardButton;
         public float TurnDelay = .5f;
         public float TimeBetweenGames = 1;
         public int RoundCount;
@@ -76,8 +79,7 @@ namespace ConnectFour
         private void StartGame(object sender, bool e)
         {
             if (e)
-            {
-
+            {               
                 _timeToMove = true;
             }
         }
@@ -108,8 +110,11 @@ namespace ConnectFour
         {
             if (AutoPlayToggle.isOn)
             {
-
                 Invoke("ClearBoard", TimeBetweenGames);
+            }
+            else
+            {
+                ClearBoardButton.gameObject.SetActive(true);
             }
         }
         private void CheckGameState()
@@ -156,6 +161,10 @@ namespace ConnectFour
             _stats.ResetViewState();
             GameOver = false;
             _timeToMove = true;
+        }
+        public void ReturnToMenu()
+        {
+            SceneManager.LoadScene("Menu");
         }
         private IEnumerator DisplayWinningPieces(List<Vector2> vectors)
         {

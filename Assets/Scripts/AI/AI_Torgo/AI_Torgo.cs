@@ -161,6 +161,7 @@ namespace ConnectFour.AI.AI_Torgo
 
 
 
+#if UNITY_EDITOR
 
         void OnDrawGizmos()
         {
@@ -204,7 +205,8 @@ namespace ConnectFour.AI.AI_Torgo
             }
 
 
-        }
+        } 
+#endif
 
         public void SetTeam(TeamName teamName)
         {

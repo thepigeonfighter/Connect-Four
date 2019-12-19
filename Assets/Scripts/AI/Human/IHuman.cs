@@ -1,9 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
 public interface IHuman{
-
-    Task<ColumnNumber> GetDesiredMoveAsync(GameState gameState);
+    void GetMove(GameState gameState, Action<ColumnNumber> callback);
 }

@@ -7,7 +7,6 @@ namespace ConnectFour
 {
     public class StatsView : MonoBehaviour, IStatsView
     {
-        public Text WinningMessage;
         public GameObject MovesLabel;
         public Toggle MoveListViewToggle;
         public GameObject MovesParent;
@@ -35,7 +34,7 @@ namespace ConnectFour
         {
             string winType = GetWinTypeWord(result.WinType);
             string winWord = AdjectiveHolder.GetVictoryWord();
-            WinningMessage.text = ($"{GetAdjective(turnCount)} {winType} {winWord} by {result.Player.GetName()} in {turnCount} turns");
+            MessageBoard.Instance.ShowMessage($"{GetAdjective(turnCount)} {winType} {winWord} by {result.Player.GetName()} in {turnCount} turns");
         }
         private List<string> GetUnformattedBoardState(GameState gameState)
         {
@@ -92,7 +91,6 @@ namespace ConnectFour
         public void ResetViewState()
         {
             OnDisable();
-            WinningMessage.text = "";
             scrollBar.GetComponent<ScrollBarController>().Reset();
         }
         public void SetMoveListView()
@@ -102,15 +100,15 @@ namespace ConnectFour
 
         public void DisplayForfeitMessage(GameResult result)
         {
-            WinningMessage.text = $"{result.Winner} was playing the fool and as such they have forfeited the game.";
+            MessageBoard.Instance.ShowMessage($"{result.Winner} was playing the fool and as such they have forfeited the game.");
         }
 
         public void UpdateMoveList(MoveEvent moveEvent)
         {
-            if (MoveListView)
-            {
-                DisplayMoveList(moveEvent);
-            }
+            //if (MoveListView)
+            //{
+            //    DisplayMoveList(moveEvent);
+            //}
         }
         private void OnDisable()
         {
@@ -129,7 +127,7 @@ namespace ConnectFour
 
         public void DisplayDrawMessage()
         {
-            WinningMessage.text = "Draw!!";
+            MessageBoard.Instance.ShowMessage("Draw!!");
         }
     }
 }

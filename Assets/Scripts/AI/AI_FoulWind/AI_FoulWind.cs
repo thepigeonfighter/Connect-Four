@@ -20,17 +20,18 @@ namespace ConnectFour.AI.AI_FoulWind
                 _lastMove = gameState.AvailableMoves.First(x => x.XIndex == 3);
                 return 3;
             }
-             Stopwatch sw = new Stopwatch();
-             sw.Start();
+            //For performance testing purposes.
+             //Stopwatch sw = new Stopwatch();
+             //sw.Start();
             Position rootNode = BuildRootNode();
             _lastMove = GetBestMove(rootNode);
-             sw.Stop();
-             UnityEngine.Debug.Log($"Took {sw.ElapsedMilliseconds} ms to complete tree.");
+             //sw.Stop();
+             //UnityEngine.Debug.Log($"Took {sw.ElapsedMilliseconds} ms to complete tree.");
 
 
             //Log file to tree.tst
-              TreeLogger treeLogger = new TreeLogger();
-              treeLogger.LogTree(rootNode);
+              //TreeLogger treeLogger = new TreeLogger();
+              //treeLogger.LogTree(rootNode);
             return _lastMove.XIndex;
         }
 

@@ -73,5 +73,10 @@ namespace ConnectFour
         {
             return _blackTeamStats;
         }
+        public static void SetPlayers(IPlayer redTeam, IPlayer blackTeam)
+        {
+            _redTeamStats.Player = redTeam;
+            _blackTeamStats.Player = blackTeam;
+        }
     }
 }
